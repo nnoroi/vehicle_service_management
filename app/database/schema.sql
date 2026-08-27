@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS vehicles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    make TEXT NOT NULL,
+    model TEXT NOT NULL,
+    year INTEGER NOT NULL,
+    registration TEXT NOT NULL UNIQUE,
+    vin TEXT UNIQUE,
+    mileage INTEGER NOT NULL DEFAULT 0,
+    fuel_type TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS service_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    vehicle_id INTEGER NOT NULL,
+    service_type TEXT NOT NULL,
+    service_date DATE NOT NULL,
+    mileage INTEGER NOT NULL,
+    cost DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    status TEXT NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
+);
