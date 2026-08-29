@@ -1,9 +1,15 @@
 from app.database.connection import get_connection
 from app.models.vehicle import Vehicle
+from app.validators.vehicle_validator import validate_vehicle
 
 
 def create_vehicle(vehicle):
     """Add a new vehicle to the database."""
+
+    errors = validate_vehicle(vehicle)
+
+    if errors:
+        raise ValueError("\n".join(errors))
 
     connection = get_connection()
     cursor = connection.execute(
@@ -86,6 +92,10 @@ def get_all_vehicles():
 
 def update_vehicle(vehicle):
     """Update an existing vehicle in the database"""
+
+    errors = validate_vehicle(vehicle)
+    if errors:
+        raise ValueError("\n".join(errors))
 
     connection = get_connection()
     cursor = connection.execute(

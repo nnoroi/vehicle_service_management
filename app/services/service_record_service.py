@@ -1,9 +1,22 @@
 from app.database.connection import get_connection
 from app.models.service_record import ServiceRecord
+from app.validators.service_record_validator import validate_service_record
+from app.services.vehicle_service import get_vehicle_by_id
 
 
 def create_service_record(record):
     """Add a new service record to the database"""
+
+    errors = validate_service_record(record)
+
+    if errors:
+        raise ValueError("\n".join(errors))
+
+    vehicle = get_vehicle_by_id(record.vehicle_id)
+    if vehicle is None:
+        raise ValueError(
+            f"Vehicle with ID {record.vehicle_id} does not exist."
+        )
 
     connection = get_connection()
     cursor = connection.execute(
@@ -88,6 +101,10 @@ def get_service_record_by_id(record_id):
 
 def update_service_record(record):
     """Update an existing service record in the database"""
+
+    errors = validate_service_record(record)
+    if errors:
+        raise ValueError("\n".join(errors))
 
     connection = get_connection()
     cursor = connection.execute(
