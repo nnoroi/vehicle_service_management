@@ -1,26 +1,44 @@
-from app.models.vehicle import Vehicle
-from app.services.vehicle_service import (
-    get_vehicle_by_id,
-    delete_vehicle
+from app.models.service_record import ServiceRecord
+from app.services.service_record_service import create_service_record, get_records_by_vehicle_id, get_service_record_by_id, update_service_record, delete_service_record
+
+record = ServiceRecord(
+    vehicle_id=1,
+    service_type="Oil Change",
+    service_date="2023-10-01",
+    mileage=50000,
+    cost=50.00,
+    status="Completed",
+    notes="Regular oil change performed"
 )
 
+created_record = create_service_record(record)
+print(f"Service record created with ID: {created_record.id}")
 
-vehicle_id = 4
 
-vehicle = get_vehicle_by_id(vehicle_id)
+vehicle_id = created_record.vehicle_id
+records = get_records_by_vehicle_id(vehicle_id)
 
-if vehicle:
-    print(f"Found: {vehicle.make} {vehicle.model}")
-else:
-    print(f"No vehicle found with ID {vehicle_id}")
+print(f"Service records for vehicle ID {vehicle_id}:")
+for record in records:
+    print(
+        f"ID: {record.id}"
+        f", Type: {record.service_type}"
+        f", Cost: {record.cost}")
 
-deleted = delete_vehicle(vehicle_id)
 
-print(f"Deleted: {deleted}")
+record.cost = 75.00
+record.notes = "Oil and filter change performed"
 
-vehicle = get_vehicle_by_id(vehicle_id)
+updated = update_service_record(record)
+print(f"Service record updated: {updated}")
 
-if vehicle is None:
-    print("Successfully deleted")
-else:
-    print(f"Vehicle still exists: {vehicle.make} {vehicle.model}")
+updated_record = get_service_record_by_id(record.id)
+
+print(f"Updated cost: {updated_record.cost}")
+print(f"Updated notes: {updated_record.notes}")
+
+deleted = delete_service_record(record.id)
+print(f"Deleted record: {deleted}")
+
+deleted_record = get_service_record_by_id(record.id)
+print(f"Record after deletion: {deleted_record}")
