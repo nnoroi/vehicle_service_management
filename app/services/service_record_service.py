@@ -136,6 +136,31 @@ def update_service_record(record):
     return cursor.rowcount > 0
 
 
+def get_all_records():
+    """"Get all service records from the databaase"""
+    connection = get_connection()
+    cursor = connection.execute(
+        """SELECT * FROM service_records ORDER BY service_date DESC"""
+    )
+
+    rows = cursor.fetchall()
+    connection.close()
+    records = []
+    for row in rows:
+        record = ServiceRecord(
+            record_id=row["id"],
+            vehicle_id=row["vehicle_id"],
+            service_type=row["service_type"],
+            service_date=row["service_date"],
+            mileage=row["mileage"],
+            cost=row["cost"],
+            status=row["status"],
+            notes=row["notes"]
+        )
+        records.append(record)
+    return records
+
+
 def delete_service_record(record_id):
     """Delete a service record from the database"""
 
