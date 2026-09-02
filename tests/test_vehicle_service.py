@@ -1,10 +1,16 @@
 from app.models.vehicle import Vehicle
+from app.models.service_record import ServiceRecord
 from app.services.vehicle_service import (
     create_vehicle,
     get_all_vehicles,
     get_vehicle_by_id,
     update_vehicle,
     delete_vehicle
+)
+
+from app.services.service_record_service import (
+    create_service_record,
+    get_records_by_vehicle_id
 )
 
 
@@ -140,3 +146,46 @@ def test_delete_vehicle(test_database, monkeypatch):
 
     assert result is True
     assert get_vehicle_by_id(created_vehicle.id) is None
+
+
+def test_delete_vehicle_cascades_service_records(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="Mercedes-Benz",
+        model="AMG C 63",
+        year=2024,
+        registration="MB24 XYZ",
+        vin="W1K98765432109876",
+        mileage=18500,
+        fuel_type="Petrol"
+    )
+
+    created_vehicle = create_vehicle(vehicle)
+
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=created_vehicle.id,
+        service_type="Oil Change",
+        service_date="31/08/2026",
+        mileage=18500,
+        cost=75.00,
+        status="Completed",
+        notes="Oil and filter replaced"
+    )
+
+    create_service_record(record)
+    result = delete_vehicle(created_vehicle.id)
+    assert result is True
+
+    records = get_records_by_vehicle_id(created_vehicle.id)
+    assert len(records) == 0
