@@ -1,3 +1,4 @@
+import pytest
 from app.models.service_record import ServiceRecord
 from app.validators.service_record_validator import validate_service_record
 
@@ -39,3 +40,41 @@ def test_invalid_service_record():
     assert "Mileage cannot be negative." in errors
     assert "Cost cannot be negative." in errors
     assert "Status must be Scheduled, In Progress, Completed, or Cancelled." in errors
+
+
+def test_valid_service_record_with_zero_cost():
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=1,
+        service_type="Warranty Check",
+        service_date="31/08/2026",
+        mileage=10000,
+        cost=0,
+        status="Completed",
+        notes="Warranty inspection"
+    )
+
+    errors = validate_service_record(record)
+
+    assert errors == []
+
+
+@pytest.mark.parametrize(
+    "status",
+    ["Scheduled", "In Progress", "Completed", "Cancelled"]
+)
+def test_valid_service_record_status(status):
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=1,
+        service_type="Oil Change",
+        service_date="31/08/2026",
+        mileage=18500,
+        cost=75.00,
+        status=status,
+        notes="Oil and filter replacement"
+    )
+
+    errors = validate_service_record(record)
+
+    assert errors == []

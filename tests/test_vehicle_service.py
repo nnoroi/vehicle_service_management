@@ -1,3 +1,4 @@
+import pytest
 from app.models.vehicle import Vehicle
 from app.models.service_record import ServiceRecord
 from app.services.vehicle_service import (
@@ -189,3 +190,47 @@ def test_delete_vehicle_cascades_service_records(test_database, monkeypatch):
 
     records = get_records_by_vehicle_id(created_vehicle.id)
     assert len(records) == 0
+
+
+def test_create_vehicle_invalid_data(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="",
+        model="AMG C 63",
+        year=2024,
+        registration="MB24 XYZ",
+        vin="W1K98765432109876",
+        mileage=18500,
+        fuel_type="Petrol"
+    )
+
+    with pytest.raises(ValueError):
+        create_vehicle(vehicle)
+
+
+def test_update_vehicle_with_invalid_data(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="Mercedes-Benz",
+        model="AMG C 63",
+        year=2024,
+        registration="MB24 XYZ",
+        vin="W1K98765432109876",
+        mileage=18500,
+        fuel_type="Petrol"
+    )
+    created_vehicle = create_vehicle(vehicle)
+    created_vehicle.make = ""
+
+    with pytest.raises(ValueError):
+        update_vehicle(created_vehicle)

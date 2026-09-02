@@ -9,7 +9,8 @@ from app.services.service_record_service import (
     get_records_by_vehicle_id,
     get_all_records,
     update_service_record,
-    delete_service_record
+    delete_service_record,
+    get_service_record_by_id
 )
 
 
@@ -422,3 +423,143 @@ def test_delete_nonexistent_service_record(test_database, monkeypatch):
     result = delete_service_record(9999)
 
     assert result is False
+
+
+def test_update_service_record_with_negative_cost(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="Mercedes-Benz",
+        model="E 53 AMG",
+        year=2025,
+        registration="MB25 XYZ",
+        vin="W1K22222222222222",
+        mileage=10000,
+        fuel_type="Petrol"
+    )
+
+    created_vehicle = create_vehicle(vehicle)
+
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=created_vehicle.id,
+        service_type="Oil Change",
+        service_date="31/08/2026",
+        mileage=10000,
+        cost=100.00,
+        status="Scheduled",
+        notes="Oil and filter replacement"
+    )
+
+    created_record = create_service_record(record)
+
+    created_record.cost = -50.00
+
+    with pytest.raises(ValueError):
+        update_service_record(created_record)
+
+
+def test_update_service_record_with_negative_mileage(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="Mercedes-Benz",
+        model="E 53 AMG",
+        year=2025,
+        registration="MB25 XYZ",
+        vin="W1K22222222222222",
+        mileage=10000,
+        fuel_type="Petrol"
+    )
+
+    created_vehicle = create_vehicle(vehicle)
+
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=created_vehicle.id,
+        service_type="Oil Change",
+        service_date="31/08/2026",
+        mileage=10000,
+        cost=100.00,
+        status="Scheduled",
+        notes="Oil and filter replacement"
+    )
+
+    created_record = create_service_record(record)
+
+    created_record.mileage = -100
+
+    with pytest.raises(ValueError):
+        update_service_record(created_record)
+
+
+def test_get_service_record_by_id(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="Mercedes-Benz",
+        model="AMG C 63",
+        year=2024,
+        registration="MB24 XYZ",
+        vin="W1K98765432109876",
+        mileage=18500,
+        fuel_type="Petrol"
+    )
+
+    created_vehicle = create_vehicle(vehicle)
+
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=created_vehicle.id,
+        service_type="Oil Change",
+        service_date="31/08/2026",
+        mileage=18500,
+        cost=75.00,
+        status="Completed",
+        notes="Oil and filter replaced"
+    )
+
+    created_record = create_service_record(record)
+
+    result = get_service_record_by_id(created_record.id)
+
+    assert result is not None
+    assert result.id == created_record.id
+    assert result.vehicle_id == created_vehicle.id
+    assert result.service_type == "Oil Change"
+
+
+def test_get_service_record_by_id_not_found(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    result = get_service_record_by_id(9999)
+    assert result is None
