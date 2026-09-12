@@ -445,3 +445,92 @@ def test_delete_vehicle_not_found(test_database, monkeypatch):
 
     data = response.get_json()
     assert data["error"] == "Vehicle not found."
+
+
+def test_get_vehicle_maintenance(monkeypatch, test_database):
+    test_connection = test_database()
+
+    cursor = test_connection.execute(
+        """
+        INSERT INTO vehicles
+        (make, model, year, registration, vin, mileage, fuel_type)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2024,
+            "TEST111",
+            "WDDTEST111234567",
+            50000,
+            "Petrol"
+        )
+    )
+
+    vehicle_id = cursor.lastrowid
+
+    test_connection.execute(
+        """
+        INSERT INTO service_records
+        (vehicle_id, service_type, service_date, mileage, cost, status, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Full Service",
+            "2026-09-10",
+            52000,
+            250,
+            "Completed",
+            "Full service completed"
+        )
+    )
+
+    test_connection.commit()
+    test_connection.close()
+
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.get(f"/vehicles/{vehicle_id}/maintenance")
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["status"] == "Service Not Due"
+    assert data["next_service_mileage"] == 62000
+    assert data["miles_remaining"] == 12000
+
+
+def test_get_non_existed_vehicle_maintenance(monkeypatch, test_database):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.get("/vehicles/9999/maintenance")
+
+    assert response.status_code == 404
+
+    data = response.get_json()
+
+    assert data["error"] == "Vehicle not found."
