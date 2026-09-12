@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app.models.vehicle import Vehicle
+from app.services.maintenance_service import get_maintenance_status
 from app.services.vehicle_service import (
     get_all_vehicles,
     get_vehicle_by_id,
@@ -148,3 +149,16 @@ def delete_vehicle_route(vehicle_id):
     return jsonify({
         "message": "Vehicle deleted successfully."
     }), 200
+
+
+@vehicle_bp.route("/vehicles/<int:vehicle_id>/maintenance")
+def get_vehicle_maintenance(vehicle_id):
+    vehicle = get_vehicle_by_id(vehicle_id)
+
+    if not vehicle:
+        return jsonify({
+            "error": "Vehicle not found."
+        }), 404
+
+    maintenance_status = get_maintenance_status(vehicle_id, vehicle.mileage)
+    return jsonify(maintenance_status), 200
