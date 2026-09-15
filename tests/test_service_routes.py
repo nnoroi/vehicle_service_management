@@ -7,6 +7,11 @@ def test_get_vehicle_services(test_database, monkeypatch):
         test_database
     )
 
+    monkeypatch.setattr(
+    "app.services.vehicle_service.get_connection",
+    test_database
+    )
+
     connection = test_database()
 
     cursor = connection.execute(
@@ -87,6 +92,10 @@ def test_get_vehicle_services_empty(test_database, monkeypatch):
         test_database
     )
 
+    monkeypatch.setattr(
+    "app.services.vehicle_service.get_connection",
+    test_database
+    )
     connection = test_database()
 
     cursor = connection.execute(

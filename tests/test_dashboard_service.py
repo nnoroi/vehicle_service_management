@@ -261,6 +261,11 @@ def test_get_vehicles_needing_service(monkeypatch, test_database):
         test_database
     )
 
+    monkeypatch.setattr(
+    "app.services.maintenance_service.get_connection",
+    test_database
+)
+
     connection = test_database()
 
     connection.execute(
@@ -282,7 +287,7 @@ def test_get_vehicles_needing_service(monkeypatch, test_database):
             2024,
             "MB24 CCL",
             "WDD12345678901231",
-            15000,
+            25000,
             "Petrol"
         )
     )
@@ -306,7 +311,7 @@ def test_get_vehicles_needing_service(monkeypatch, test_database):
             2025,
             "MB25 ECL",
             "WDD12345678901232",
-            25000,
+            35000,
             "Diesel"
         )
     )
