@@ -1,24 +1,33 @@
 {% extends "base.html" %}
+
 {% block content %}
 
+<section class="dashboard">
 
-<h1>Mercedes Vehicle Service Management</h1>
+    <header class="dashboard-header">
+        <h1>Dashboard</h1>
+        <p>Overview of your Mercedes vehicle service management system.</p>
+    </header>
 
-<p>Dashboard</p>
+    <section class="dashboard-stats">
 
-<div>
-    <h2>Total Vehicles</h2>
-    <p>{{ total_vehicles }}</p>
-</div>
+        <article class="stat-card">
+            <h2>Total Vehicles</h2>
+            <p>{{ total_vehicles }}</p>
+        </article>
 
-<div>
-    <h2>Total Service Records</h2>
-    <p>{{ total_service_records }}</p>
-</div>
+        <article class="stat-card">
+            <h2>Total Service Records</h2>
+            <p>{{ total_service_records }}</p>
+        </article>
 
-<div>
-    <h2>Vehicles Needing Service</h2>
-    <p>{{ vehicles_needing_service }}</p>
-</div>
+        <article class="stat-card">
+            <h2>Vehicles Needing Service</h2>
+            <p>{{ vehicles_needing_service }}</p>
+        </article>
+
+    </section>
+
+</section>
 
 {% endblock %}

@@ -39,14 +39,12 @@ def test_get_vehicles(test_database, monkeypatch):
 
     with app.test_client() as client:
         response = client.get("/vehicles")
+
     assert response.status_code == 200
-
-    data = response.get_json()
-
-    assert len(data) == 1
-    assert data[0]["make"] == "Mercedes-Benz"
-    assert data[0]["model"] == "E-Class"
-    assert data[0]["year"] == 2025
+    assert b"Vehicles" in response.data
+    assert b"Mercedes-Benz" in response.data   
+    assert b"E-Class" in response.data
+    assert b"MB25 ABC" in response.data
 
 
 def test_get_vehicle(test_database, monkeypatch):
@@ -88,14 +86,15 @@ def test_get_vehicle(test_database, monkeypatch):
 
     with app.test_client() as client:
         response = client.get(f"/vehicles/{vehicle_id}")
+
+        
     assert response.status_code == 200
-
-    data = response.get_json()
-
-    assert data["id"] == vehicle_id
-    assert data["make"] == "Mercedes-Benz"
-    assert data["model"] == "E-Class"
-    assert data["year"] == 2025
+    assert b"Mercedes-Benz" in response.data
+    assert b"E-Class" in response.data
+    assert b"MB25 ABC" in response.data
+    assert b"WDD12345678901234" in response.data
+    assert b"5000" in response.data
+    assert b"Petrol" in response.data
 
 
 def test_get_vehicle_not_found(test_database, monkeypatch):
@@ -108,11 +107,9 @@ def test_get_vehicle_not_found(test_database, monkeypatch):
 
     with app.test_client() as client:
         response = client.get("/vehicles/9999")
+
     assert response.status_code == 404
-
-    data = response.get_json()
-
-    assert data["error"] == "Vehicle not found"
+    assert b"Vehicle not found" in response.data
 
 
 def test_create_vehicle(test_database, monkeypatch):
@@ -534,3 +531,151 @@ def test_get_non_existed_vehicle_maintenance(monkeypatch, test_database):
     data = response.get_json()
 
     assert data["error"] == "Vehicle not found."
+
+
+
+
+
+def test_add_vehicle(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles/add",
+            data={
+                "make": "Mercedes-Benz",
+                "model": "C-Class",
+                "year": "2025",
+                "registration": "MB25 CCL",
+                "vin": "WDD12345678901233",
+                "mileage": "10000",
+                "fuel_type": "Petrol"
+            }
+        )
+
+    assert response.status_code == 302
+    assert response.location.endswith("/vehicles/1")
+
+
+def test_edit_vehicle(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 EDT",
+            "WDD12345678901235",
+            30000,
+            "Diesel"
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles/1/edit",
+            data={
+                "make": "Mercedes-Benz",
+                "model": "E-Class",
+                "year": "2025",
+                "registration": "MB25 EDT",
+                "vin": "WDD12345678901235",
+                "mileage": "45000",
+                "fuel_type": "Diesel"
+            }
+        )
+
+    assert response.status_code == 302
+    assert response.location.endswith("/vehicles/1")
+
+    connection = test_database()
+
+    row = connection.execute(
+        "SELECT mileage FROM vehicles WHERE id = ?",
+        (1,)
+    ).fetchone()
+    connection.close()
+    assert row["mileage"] == 45000
+
+
+def test_delete_vehicle_page(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "C-Class",
+            2025,
+            "MB25 DEL",
+            "WDD12345678901236",
+            30000,
+            "Petrol"
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post("/vehicles/1/delete")
+
+    assert response.status_code == 302
+    assert response.location.endswith("/vehicles")
+
+    connection = test_database()
+
+    row = connection.execute(
+        "SELECT * FROM vehicles WHERE id = ?",
+        (1,)
+    ).fetchone()
+
+    connection.close()
+
+    assert row is None

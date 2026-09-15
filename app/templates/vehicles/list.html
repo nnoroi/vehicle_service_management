@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="vehicles-page">
+
+    <header class="page-header">
+        <h1>Vehicles</h1>
+        <p>Manage your Mercedes vehicles and their service information</p>
+    </header>
+
+    <section class="vehicle-list">
+
+        {% if vehicles %}
+            {% for vehicle in vehicles %}
+                <article class="vehicle-card">
+
+                    <div class="vehicle-card-header">
+                        <h2>{{ vehicle.make }} {{ vehicle.model }}</h2>
+                        <span>{{ vehicle.year }}</span>
+                    </div>
+
+                    <div class="vehicle-card-details">
+
+                        <p>
+                            <strong>Registration:</strong>
+                            {{ vehicle.registration }}
+                        </p>
+
+                        <p>
+                            <strong>VIN:</strong>
+                            {{ vehicle.vin }}
+                        </p>
+
+                        <p>
+                            <strong>Mileage:</strong>
+                            {{ vehicle.mileage }} miles
+                        </p>
+
+                        <p>
+                            <strong>Fuel Type:</strong>
+                            {{ vehicle.fuel_type }}
+                        </p>
+
+                    </div>
+
+                    <a href="/vehicles/{{ vehicle.id }}">
+                        View Vehicle
+                    </a>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>No vehicles found.</p>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

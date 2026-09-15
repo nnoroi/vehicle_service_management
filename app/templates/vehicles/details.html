@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="vehicle-details">
+    <header class="page-header">
+        <h1>{{ vehicle.make }} {{ vehicle.model }}</h1>
+        <p>{{ vehicle.year }}</p>
+    </header>
+
+    <section class="vehicle-information">
+
+        <p>
+            <strong>Registration:</strong>
+            {{ vehicle.registration }}
+        </p>
+
+        <p>
+            <strong>VIN:</strong>
+            {{ vehicle.vin }}
+        </p>
+
+        <p>
+            <strong>Mileage</strong>
+            {{ vehicle.mileage }} miles
+        </p>
+
+        <p>
+            <strong>Fuel Type:</strong>
+            {{ vehicle.fuel_type }}
+        </p>
+
+    </section>
+    <div class="vehicle-actions">
+        <a href="/vehicles">
+            Back to Vehicles
+        </a>
+
+        <form method="POST" action="/vehicles/{{ vehicle.id }}/delete">
+            <button type="submit">
+                Delete Vehicle
+            </button>
+        </form>
+    </div>
+{% endblock %}
