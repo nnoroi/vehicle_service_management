@@ -43,23 +43,30 @@ main {
 .dashboard-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 24px;
 }
 
 .stat-card {
     background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 28px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
+.stat-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
 .stat-card h2 {
-    font-size: 18px;
+    font-size: 17px;
     margin-top: 0;
+    margin-bottom: 15px;
+    color: #555;
 }
 
 .stat-card p {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
-    margin-bottom: 0;
+    margin: 0;
 }
