@@ -624,3 +624,58 @@ def test_edit_vehicle(test_database, monkeypatch):
     ).fetchone()
     connection.close()
     assert row["mileage"] == 45000
+
+
+def test_delete_vehicle_page(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "C-Class",
+            2025,
+            "MB25 DEL",
+            "WDD12345678901236",
+            30000,
+            "Petrol"
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post("/vehicles/1/delete")
+
+    assert response.status_code == 302
+    assert response.location.endswith("/vehicles")
+
+    connection = test_database()
+
+    row = connection.execute(
+        "SELECT * FROM vehicles WHERE id = ?",
+        (1,)
+    ).fetchone()
+
+    connection.close()
+
+    assert row is None

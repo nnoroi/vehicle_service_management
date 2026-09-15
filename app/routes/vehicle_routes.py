@@ -182,6 +182,17 @@ def edit_vehicle(vehicle_id):
         vehicle = vehicle
     )
 
+@vehicle_bp.route("/vehicles/<int:vehicle_id>/delete", methods=["POST"])
+def delete_vehicle_page(vehicle_id):
+    vehicle = get_vehicle_by_id(vehicle_id)
+
+    if not vehicle:
+        return "Vehicle not found", 404
+
+    delete_vehicle(vehicle_id)
+
+    return redirect("/vehicles")
+
 @vehicle_bp.route("/vehicles/<int:vehicle_id>", methods=["DELETE"])
 def delete_vehicle_route(vehicle_id):
     deleted = delete_vehicle(vehicle_id)
@@ -194,6 +205,7 @@ def delete_vehicle_route(vehicle_id):
     return jsonify({
         "message": "Vehicle deleted successfully."
     }), 200
+
 
 
 @vehicle_bp.route("/vehicles/<int:vehicle_id>/maintenance")
