@@ -531,3 +531,32 @@ def test_get_non_existed_vehicle_maintenance(monkeypatch, test_database):
     data = response.get_json()
 
     assert data["error"] == "Vehicle not found."
+
+
+
+
+
+def test_add_vehicle(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles/add",
+            data={
+                "make": "Mercedes-Benz",
+                "model": "C-Class",
+                "year": "2025",
+                "registration": "MB25 CCL",
+                "vin": "WDD12345678901233",
+                "mileage": "10000",
+                "fuel_type": "Petrol"
+            }
+        )
+
+    assert response.status_code == 302
+    assert response.location.endswith("/vehicles/1")
