@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, redirect
 from app.models.vehicle import Vehicle
 from app.services.maintenance_service import get_maintenance_status
 from app.services.vehicle_service import (
@@ -18,6 +18,22 @@ def get_vehicles():
         "vehicles/list.html",
         vehicles = vehicles_list
     )
+
+@vehicle_bp.route("/vehicles/add", methods=["GET", "POST"])
+def add_vehicle():
+    if request.method == "POST":
+        vehicle = Vehicle(
+            make=request.form["make"],
+            model=request.form["model"],
+            year=int(request.form["year"]),
+            registration=request.form["registration"],
+            vin=request.form["vin"],
+            mileage=int(request.form["mileage"]),
+            fuel_type=request.form["fuel_type"]
+        )
+        create_vehicle(vehicle)
+        return redirect(f"/vehicles/{vehicle.id}")
+    return render_template("vehicles/add.html")
 
 
 @vehicle_bp.route("/vehicles/<int:vehicle_id>")
