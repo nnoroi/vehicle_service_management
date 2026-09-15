@@ -31,7 +31,16 @@ def add_vehicle():
             mileage=int(request.form["mileage"]),
             fuel_type=request.form["fuel_type"]
         )
-        create_vehicle(vehicle)
+
+        try:
+            vehicle = create_vehicle(vehicle)
+        except ValueError as error:
+            return render_template(
+                "vehicles/add.html",
+                error = str(error),
+                vehicle = vehicle
+            ), 400
+
         return redirect(f"/vehicles/{vehicle.id}")
     return render_template("vehicles/add.html")
 

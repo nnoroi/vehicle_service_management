@@ -88,3 +88,12 @@ main {
         margin-right: 15px;
     }
 }
+
+.form-error {
+    background-color: #ffe6e6;
+    color: #b00020;
+    border: 1px solid #ffb3b3;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
