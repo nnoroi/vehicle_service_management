@@ -70,3 +70,21 @@ main {
     font-weight: bold;
     margin: 0;
 }
+
+@media (max-width: 768px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    main {
+        padding: 30px 15px;
+    }
+
+    nav {
+        padding: 15px;
+    }
+
+    nav a {
+        margin-right: 15px;
+    }
+}
