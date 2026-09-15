@@ -560,3 +560,67 @@ def test_add_vehicle(test_database, monkeypatch):
 
     assert response.status_code == 302
     assert response.location.endswith("/vehicles/1")
+
+
+def test_edit_vehicle(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 EDT",
+            "WDD12345678901235",
+            30000,
+            "Diesel"
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles/1/edit",
+            data={
+                "make": "Mercedes-Benz",
+                "model": "E-Class",
+                "year": "2025",
+                "registration": "MB25 EDT",
+                "vin": "WDD12345678901235",
+                "mileage": "45000",
+                "fuel_type": "Diesel"
+            }
+        )
+
+    assert response.status_code == 302
+    assert response.location.endswith("/vehicles/1")
+
+    connection = test_database()
+
+    row = connection.execute(
+        "SELECT mileage FROM vehicles WHERE id = ?",
+        (1,)
+    ).fetchone()
+    connection.close()
+    assert row["mileage"] == 45000

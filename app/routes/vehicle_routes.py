@@ -150,6 +150,38 @@ def update_vehicle_route(vehicle_id):
     }), 200
 
 
+@vehicle_bp.route("/vehicles/<int:vehicle_id>/edit", methods=["GET", "POST"])
+def edit_vehicle(vehicle_id):
+    vehicle = get_vehicle_by_id(vehicle_id)
+
+    if not vehicle:
+        return "Vehicle not found", 404
+
+    if request.method == "POST":
+        vehicle.make = request.form["make"]
+        vehicle.model = request.form["model"]
+        vehicle.year = int(request.form["year"])
+        vehicle.registration  = request.form["registration"]
+        vehicle.vin  = request.form["vin"]
+        vehicle.mileage  = int(request.form["mileage"])
+        vehicle.fuel_type = request.form["fuel_type"]
+
+        try:
+            update_vehicle(vehicle)
+        except ValueError as error:
+            return render_template(
+                "vehicles/edit.html",
+                vehicle = vehicle,
+                error = str(error)
+            ), 400
+
+        return redirect(f"/vehicles/{vehicle_id}")
+
+    return render_template(
+        "vehicles/edit.html",
+        vehicle = vehicle
+    )
+
 @vehicle_bp.route("/vehicles/<int:vehicle_id>", methods=["DELETE"])
 def delete_vehicle_route(vehicle_id):
     deleted = delete_vehicle(vehicle_id)
@@ -175,3 +207,5 @@ def get_vehicle_maintenance(vehicle_id):
 
     maintenance_status = get_maintenance_status(vehicle_id, vehicle.mileage)
     return jsonify(maintenance_status), 200
+
+
