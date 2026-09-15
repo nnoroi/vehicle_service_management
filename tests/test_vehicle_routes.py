@@ -39,14 +39,12 @@ def test_get_vehicles(test_database, monkeypatch):
 
     with app.test_client() as client:
         response = client.get("/vehicles")
+        
     assert response.status_code == 200
-
-    data = response.get_json()
-
-    assert len(data) == 1
-    assert data[0]["make"] == "Mercedes-Benz"
-    assert data[0]["model"] == "E-Class"
-    assert data[0]["year"] == 2025
+    assert b"Vehicles" in response.data
+    assert b"Mercedes-Benz" in response.data   
+    assert b"E-Class" in response.data
+    assert b"MB25 ABC" in response.data
 
 
 def test_get_vehicle(test_database, monkeypatch):

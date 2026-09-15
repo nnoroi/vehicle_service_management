@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, render_template, request, jsonify
 from app.models.vehicle import Vehicle
 from app.services.maintenance_service import get_maintenance_status
 from app.services.vehicle_service import (
@@ -13,20 +13,11 @@ vehicle_bp = Blueprint("vehicles", __name__)
 
 @vehicle_bp.route("/vehicles")
 def get_vehicles():
-    vehicles = get_all_vehicles()
-    return jsonify([
-        {
-            "id": vehicle.id,
-            "make": vehicle.make,
-            "model": vehicle.model,
-            "year": vehicle.year,
-            "registration": vehicle.registration,
-            "vin": vehicle.vin,
-            "mileage": vehicle.mileage,
-            "fuel_type": vehicle.fuel_type
-        }
-        for vehicle in vehicles
-    ])
+    vehicles_list = get_all_vehicles()
+    return render_template(
+        "vehicles/list.html",
+        vehicles = vehicles_list
+    )
 
 
 @vehicle_bp.route("/vehicles/<int:vehicle_id>")
