@@ -23,6 +23,7 @@
             id="make"
             name ="make"
             value="Mercedes-Benz"
+            value="{{ vehicle.make if vehicle else 'Mercedes-Benz' }}"
             required>
         </div>
 
@@ -32,6 +33,7 @@
             type="text"
             id="model"
             name="model"
+            value="{{ vehicle.model if vehicle else '' }}"
             required>
         </div>
 
@@ -41,6 +43,7 @@
             type="number"
             id="year"
             name ="year"
+            value="{{ vehicle.year if vehicle else '' }}"
             required>
         </div>
 
@@ -51,6 +54,7 @@
             type="text"
             id="registration"
             name ="registration"
+            value="{{ vehicle.registration if vehicle else '' }}"
             required>
         </div>
 
@@ -60,8 +64,8 @@
                 type="text"
                 id="vin"
                 name="vin"
-                required
-            >
+                value="{{ vehicle.vin if vehicle else '' }}"
+                required>
         </div>
 
         <div class="form-group">
@@ -72,19 +76,36 @@
                 name="mileage"
                 min="0"
                 value="0"
-                required
-            >
+                value="{{ vehicle.mileage if vehicle else 0 }}"
+                required>
         </div>
 
         <div class="form-group">
             <label for="fuel_type">Fuel Type</label>
-            <select id="fuel_type" name="fuel_type" required>
-                <option value="">Select fuel type</option>
-                <option value="Petrol">Petrol</option>
-                <option value="Diesel">Diesel</option>
-                <option value="Hybrid">Hybrid</option>
-                <option value="Electric">Electric</option>
-            </select>
+        
+        <select id="fuel_type" name="fuel_type" required>
+            <option value="">Select fuel type</option>
+            
+            <option value="Petrol"
+                {% if vehicle and vehicle.fuel_type == "Petrol" %}selected{% endif %}>
+                Petrol
+            </option>
+
+            <option value="Diesel"
+                {% if vehicle and vehicle.fuel_type == "Diesel" %}selected{% endif %}>
+                Diesel
+            </option>
+
+            <option value="Hybrid"
+                {% if vehicle and vehicle.fuel_type == "Hybrid" %}selected{% endif %}>
+                Hybrid
+            </option>
+
+            <option value="Electric"
+                {% if vehicle and vehicle.fuel_type == "Electric" %}selected{% endif %}>
+                Electric
+            </option>
+        </select>
         </div>
 
          <button type="submit">
