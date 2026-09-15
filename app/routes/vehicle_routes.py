@@ -23,17 +23,14 @@ def get_vehicles():
 @vehicle_bp.route("/vehicles/<int:vehicle_id>")
 def get_vehicle(vehicle_id):
     vehicle = get_vehicle_by_id(vehicle_id)
-    if vehicle:
-        return jsonify({
-            "id": vehicle.id,
-            "make": vehicle.make,
-            "model": vehicle.model,
-            "year": vehicle.year,
-            "registration": vehicle.registration,
-            "vin": vehicle.vin,
-            "mileage": vehicle.mileage,
-            "fuel_type": vehicle.fuel_type
-        })
+    
+    if not vehicle:
+        return "Vehicle not found", 404
+
+    return render_template(
+        "vehicles/details.html",
+        vehicle = vehicle
+    )
 
     return jsonify({"error": "Vehicle not found"}), 404
 

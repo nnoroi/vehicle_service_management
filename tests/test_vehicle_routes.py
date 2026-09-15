@@ -39,7 +39,7 @@ def test_get_vehicles(test_database, monkeypatch):
 
     with app.test_client() as client:
         response = client.get("/vehicles")
-        
+
     assert response.status_code == 200
     assert b"Vehicles" in response.data
     assert b"Mercedes-Benz" in response.data   
@@ -86,14 +86,15 @@ def test_get_vehicle(test_database, monkeypatch):
 
     with app.test_client() as client:
         response = client.get(f"/vehicles/{vehicle_id}")
+
+        
     assert response.status_code == 200
-
-    data = response.get_json()
-
-    assert data["id"] == vehicle_id
-    assert data["make"] == "Mercedes-Benz"
-    assert data["model"] == "E-Class"
-    assert data["year"] == 2025
+    assert b"Mercedes-Benz" in response.data
+    assert b"E-Class" in response.data
+    assert b"MB25 ABC" in response.data
+    assert b"WDD12345678901234" in response.data
+    assert b"5000" in response.data
+    assert b"Petrol" in response.data
 
 
 def test_get_vehicle_not_found(test_database, monkeypatch):
@@ -106,11 +107,9 @@ def test_get_vehicle_not_found(test_database, monkeypatch):
 
     with app.test_client() as client:
         response = client.get("/vehicles/9999")
+
     assert response.status_code == 404
-
-    data = response.get_json()
-
-    assert data["error"] == "Vehicle not found"
+    assert b"Vehicle not found" in response.data
 
 
 def test_create_vehicle(test_database, monkeypatch):

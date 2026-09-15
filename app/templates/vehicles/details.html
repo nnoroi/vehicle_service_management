@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="vehicle-details">
+    <header class="page-header">
+        <h1>{{ vehicle.make }} {{ vehicle.model }}</h1>
+        <p>{{ vehicle.year }}</p>
+    </header>
+
+    <section class="vehicle-information">
+
+        <p>
+            <strong>Registration:</strong>
+            {{ vehicle.registration }}
+        </p>
+
+        <p>
+            <strong>VIN:</strong>
+            {{ vehicle.vin }}
+        </p>
+
+        <p>
+            <strong>Mileage</strong>
+            {{ vehicle.mileage }} miles
+        </p>
+
+        <p>
+            <strong>Fuel Type:</strong>
+            {{ vehicle.fuel_type }}
+        </p>
+
+    </section>
+    <a href="/vehicles">
+        Back to Vehicles
+    </a>
+</section>
+{% endblock %}
