@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<h1>Mercedes Vehicle Service Management</h1>
+
+<p>Dashboard</p>
+
+<div>
+    <h2>Total Vehicles</h2>
+    <p>{{ total_vehicles }}</p>
+</div>
+
+<div>
+    <h2>Total Service Records</h2>
+    <p>{{ total_service_records }}</p>
+</div>
+
+<div>
+    <h2>Vehicles Needing Service</h2>
+    <p>{{ vehicles_needing_service }}</p>
+</div>
+
+{% endblock %}
