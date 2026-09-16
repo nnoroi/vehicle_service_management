@@ -103,7 +103,16 @@
 
                         <p>
                             <strong>Status:</strong>
-                            {{ record["status"] }}
+                            
+                            {% if record["status"] == "Completed" %}
+                                <span class="status-completed">Completed</span>
+                            {% elif record["status"] == "In Progress" %}
+                                <span class="status-progress">In Progress</span>
+                            {% elif record["status"] == "Scheduled" %}
+                                <span class="status-scheduled">Scheduled</span>
+                            {% else %}
+                                <span class="status-cancelled">Cancelled</span>
+                            {% endif %}
                         </p>
 
                         <a href="/services/{{ record['id'] }}/details">
