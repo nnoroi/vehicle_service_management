@@ -100,3 +100,30 @@ def get_vehicle_service_record_count(vehicle_id):
     connection.close()
 
     return row["total"]
+
+def get_recent_service_records(limit=5):
+    connection = get_connection()
+
+    rows = connection.execute(
+        """
+        SELECT 
+            service_records.id,
+            service_records.vehicle_id,
+            service_records.service_type,
+            service_records.service_date,
+            service_records.mileage,
+            service_records.cost,
+            service_records.status,
+            vehicles.make,
+            vehicles.model
+        FROM service_records
+        JOIN vehicles 
+            ON service_records.vehicle_id = vehicles.id
+        ORDER BY service_records.service_date DESC
+        LIMIT ?
+        """,
+        (limit,)
+    ).fetchall()
+
+    connection.close()
+    return rows
