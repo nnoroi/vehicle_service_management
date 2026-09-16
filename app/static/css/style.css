@@ -140,3 +140,35 @@ main {
     margin-top: 12px;
     font-weight: bold;
 }
+
+.recent-service-activity {
+    margin-top: 40px;
+}
+
+.recent-service-activity h2 {
+    margin-bottom: 20px;
+}
+
+.recent-service-activity .service-card {
+    background-color: white;
+    padding: 24px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.recent-service-activity .service-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.recent-service-activity .service-card p {
+    margin: 8px 0;
+}
+
+.recent-service-activity .service-card a {
+    display: inline-block;
+    margin-top: 12px;
+    font-weight: bold;
+}

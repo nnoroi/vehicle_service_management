@@ -69,6 +69,59 @@
 
     </section>
 
+    <section class="recent-service-activity">
+
+        <h2>Recent Service Activity</h2>
+
+            {% if recent_service_records %}
+
+                {% for record in recent_service_records %}
+
+                    <article class="service-card">
+
+                        <h3>{{ record["service_type"] }}</h3>
+
+                        <p>
+                            <strong>Vehicle:</strong>
+                            {{ record["make"] }} {{ record["model"] }}
+                        </p>
+
+                        <p>
+                            <strong>Date:</strong>
+                            {{ record["service_date"] }}
+                        </p>
+
+                        <p>
+                            <strong>Mileage:</strong>
+                            {{ record["mileage"] }} miles
+                        </p>
+
+                        <p>
+                            <strong>Cost:</strong>
+                            £{{ record["cost"] }}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            {{ record["status"] }}
+                        </p>
+
+                        <a href="/services/{{ record['id'] }}/details">
+                            View Service Record
+                        </a>
+
+                    </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>No recent service activity.</p>
+
+            {% endif %}
+
+    </section>
+
 </section>
 
 {% endblock %}
