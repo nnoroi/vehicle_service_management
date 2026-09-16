@@ -35,11 +35,43 @@ def get_vehicles_needing_service():
 
     return total
 
+
+
+def get_dashboard_summary():
+    total_vehicles = get_total_vehicles()
+    total_service_records = get_total_service_records()
+    total_vehicles_needing_service = get_vehicles_needing_service()
+
+    return {
+        "total_vehicles": total_vehicles,
+        "total_service_records": total_service_records,
+        "vehicles_needing_service": total_vehicles_needing_service
+    }
+
+
+
 def get_vehicles_needing_service_list():
     connection = get_connection()
 
     rows = connection.execute(
-        "SELECT id, make, model, year, mileage FROM vehicles"
+        """
+        SELECT
+            vehicles.id,
+            vehicles.make,
+            vehicles.model,
+            vehicles.year,
+            vehicles.mileage,
+            COUNT(service_records.id) AS service_record_count
+        FROM vehicles
+        LEFT JOIN service_records
+            ON vehicles.id = service_records.vehicle_id
+        GROUP BY
+            vehicles.id,
+            vehicles.make,
+            vehicles.model,
+            vehicles.year,
+            vehicles.mileage
+        """
     ).fetchall()
 
     connection.close()
@@ -53,13 +85,18 @@ def get_vehicles_needing_service_list():
     return vehicles
 
 
-def get_dashboard_summary():
-    total_vehicles = get_total_vehicles()
-    total_service_records = get_total_service_records()
-    total_vehicles_needing_service = get_vehicles_needing_service()
+def get_vehicle_service_record_count(vehicle_id):
+    connection = get_connection()
 
-    return {
-        "total_vehicles": total_vehicles,
-        "total_service_records": total_service_records,
-        "vehicles_needing_service": total_vehicles_needing_service
-    }
+    row = connection.execute(
+        """
+        SELECT COUNT(*) AS total
+        FROM service_records
+        WHERE vehicle_id = ?
+        """,
+        (vehicle_id,)
+    ).fetchone()
+
+    connection.close()
+
+    return row["total"]
