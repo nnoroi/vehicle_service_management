@@ -23,8 +23,10 @@
 
                 <div class="service-card-details">
                     <p>
-                        <strong>Vehicle ID:</strong>
-                        {{ record.vehicle_id }}
+                        <strong>Vehicle:</strong>
+                        {{ vehicles[record.vehicle_id].make }}
+                        {{ vehicles[record.vehicle_id].model }}
+                        — {{ vehicles[record.vehicle_id].year }}
                     </p>
 
                     <p>

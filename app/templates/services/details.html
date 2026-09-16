@@ -49,6 +49,16 @@
         <a href="/services">
             Back to Services
         </a>
+
+        <form
+            method="POST"
+            action="/services/{{ record.id }}/delete"
+            onsubmit="return confirm('Are you sure you want to delete this service record?');"
+            >
+            <button type="submit">
+                Delete Service Record
+            </button>
+        </form>
         
     </div>
 </section>

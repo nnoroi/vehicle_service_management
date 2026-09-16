@@ -13,6 +13,11 @@
     </header>
 
     <form method="POST">
+        {% if error %}
+            <p class="form-error">
+                {{ error }}
+            </p>
+        {% endif %}
 
         <div>
             <label for="service_type">Service Type</label>

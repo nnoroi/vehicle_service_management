@@ -17,9 +17,14 @@ service_bp = Blueprint("services", __name__)
 def get_services():
     records = get_all_records()
 
+    vehicles = {}
+    for record in records:
+        vehicles[record.vehicle_id] = get_vehicle_by_id(record.vehicle_id)
+
     return render_template(
         "services/list.html",
-        records = records
+        records = records,
+        vehicles = vehicles
     )
 
 @service_bp.route("/vehicles/<int:vehicle_id>/services")
@@ -183,10 +188,26 @@ def submit_edit_service(service_id):
     try:
         update_service_record(record)
     except ValueError as error:
-        return str(error), 400
+        vehicle = get_vehicle_by_id(record.vehicle_id)
+        return render_template(
+            "services/edit.html",
+            record=record,
+            vehicle=vehicle,
+            error=str(error)
+        )
 
     return redirect(f"/services/{service_id}/details")
     
+
+@service_bp.route("/services/<int:service_id>/delete", methods=["POST"])
+def submit_delete_service(service_id):
+    deleted = delete_service_record(service_id)
+
+    if not deleted:
+        return "Service record not found", 404
+
+    return redirect("/services")
+
     
 
 
