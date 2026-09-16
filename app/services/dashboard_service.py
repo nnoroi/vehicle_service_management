@@ -35,6 +35,23 @@ def get_vehicles_needing_service():
 
     return total
 
+def get_vehicles_needing_service_list():
+    connection = get_connection()
+
+    rows = connection.execute(
+        "SELECT id, make, model, year, mileage FROM vehicles"
+    ).fetchall()
+
+    connection.close()
+
+    vehicles = []
+
+    for car in rows:
+        if is_service_due(car["id"], car["mileage"]):
+            vehicles.append(car)
+
+    return vehicles
+
 
 def get_dashboard_summary():
     total_vehicles = get_total_vehicles()
