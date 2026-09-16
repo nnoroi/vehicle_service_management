@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, render_template, redirect
 
 from app.models.service_record import ServiceRecord
 from app.services.service_record_service import (
@@ -133,6 +133,61 @@ def get_service(service_id):
         "status": record.status,
         "notes": record.notes
     }), 200
+
+
+
+@service_bp.route("/services/<int:service_id>/details")
+def service_details(service_id):
+    record = get_service_record_by_id(service_id)
+
+    if not record:
+        return "Service record not found", 404
+
+    vehicle = get_vehicle_by_id(record.vehicle_id)
+
+    return render_template(
+        "services/details.html",
+        record = record,
+        vehicle = vehicle
+    )
+
+@service_bp.route("/services/<int:service_id>/edit", methods=["GET"])
+def edit_service(service_id):
+    record = get_service_record_by_id(service_id)
+
+    if not record:
+        return "Service record not found", 404
+
+    vehicle = get_vehicle_by_id(record.vehicle_id)
+
+    return render_template(
+        "services/edit.html",
+        record = record,
+        vehicle = vehicle
+    )
+
+@service_bp.route("/services/<int:service_id>/edit", methods=["POST"])
+def submit_edit_service(service_id):
+    record = get_service_record_by_id(service_id)
+
+    if not record:
+        return "Service record not found", 404
+
+    record.service_type = request.form["service_type"]
+    record.service_date = request.form["service_date"]
+    record.mileage = int(request.form["mileage"])
+    record.cost = float(request.form["cost"])
+    record.status = request.form["status"]
+    record.notes = request.form.get("notes")
+
+    try:
+        update_service_record(record)
+    except ValueError as error:
+        return str(error), 400
+
+    return redirect(f"/services/{service_id}/details")
+    
+    
 
 
 @service_bp.route("/services/<int:service_id>", methods=["PUT"])
