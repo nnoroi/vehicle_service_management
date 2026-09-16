@@ -38,7 +38,15 @@
 
         <p>
             <strong>Status:</strong>
-            {{ maintenance_status.status }}
+            {% if maintenance_status.status == "Service Due" %}
+                <span class="maintenance-due">
+                    Service Due
+                </span>
+            {% else %}
+                <span class="maintenance-ok">
+                    Service Not Due
+                </span>
+            {% endif %}
         </p>
 
         {% if maintenance_status.next_service_mileage %}
@@ -57,7 +65,7 @@
                 Service required
             </p>
         {% endif %}
-        
+
     </section>
 
     <section class="service-history">

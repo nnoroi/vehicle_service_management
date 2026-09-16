@@ -97,3 +97,13 @@ main {
     border-radius: 6px;
     margin-bottom: 20px;
 }
+
+.maintenance-due {
+    color: #b00020;
+    font-weight: bold;
+}
+
+.maintenance-ok {
+    color: #2e7d32;
+    font-weight: bold;
+}
