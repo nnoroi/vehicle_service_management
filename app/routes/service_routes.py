@@ -118,6 +118,47 @@ def create_vehicle_service(vehicle_id):
         "notes": service_record.notes
     }), 201
 
+@service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["GET"])
+def new_service(vehicle_id):
+    vehicle = get_vehicle_by_id(vehicle_id)
+
+    if not vehicle:
+        return "Vehicle not found", 404
+
+    return render_template(
+        "services/create.html",
+        vehicle = vehicle
+    )
+
+@service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["POST"])
+def submit_new_service(vehicle_id):
+    vehicle = get_vehicle_by_id(vehicle_id)
+
+    if not vehicle:
+        return "Vehicle not found", 404
+
+    record = ServiceRecord(
+        vehicle_id=vehicle_id,
+        service_type=request.form["service_type"],
+        service_date=request.form["service_date"],
+        mileage=int(request.form["mileage"]),
+        cost=float(request.form["cost"]),
+        status=request.form["status"],
+        notes=request.form.get("notes")
+    )
+
+    try:
+        create_service_record(record)
+    except ValueError as error:
+        return render_template(
+            "services/create.html",
+            vehicle = vehicle,
+            error = str(error),
+            record = record
+        )    
+
+    return redirect(f"/services/{record.id}/details")
+
 
 @service_bp.route("/services/<int:service_id>")
 def get_service(service_id):
