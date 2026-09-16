@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 
 from app.models.service_record import ServiceRecord
 from app.services.service_record_service import (
@@ -6,12 +6,21 @@ from app.services.service_record_service import (
     get_service_record_by_id,
     create_service_record,
     update_service_record,
-    delete_service_record
+    delete_service_record,
+    get_all_records
 )
 from app.services.vehicle_service import get_vehicle_by_id
 
 service_bp = Blueprint("services", __name__)
 
+@service_bp.route("/services")
+def get_services():
+    records = get_all_records()
+
+    return render_template(
+        "services/list.html",
+        records = records
+    )
 
 @service_bp.route("/vehicles/<int:vehicle_id>/services")
 def get_vehicle_services(vehicle_id):
