@@ -55,10 +55,16 @@ def get_vehicle(vehicle_id):
 
     service_records = get_records_by_vehicle_id(vehicle_id)
 
+    maintenance_status = get_maintenance_status(
+        vehicle_id,
+        vehicle.mileage
+    )
+
     return render_template(
         "vehicles/details.html",
         vehicle = vehicle,
-        service_records = service_records
+        service_records = service_records,
+        maintenance_status = maintenance_status
     )
 
 

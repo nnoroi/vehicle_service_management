@@ -32,6 +32,34 @@
 
     </section>
 
+    <section class="maintenance-status">
+
+        <h2>Maintenance Status</h2>
+
+        <p>
+            <strong>Status:</strong>
+            {{ maintenance_status.status }}
+        </p>
+
+        {% if maintenance_status.next_service_mileage %}
+            <p>
+                <strong>Next Service:</strong>
+                {{ maintenance_status.next_service_mileage }} miles
+            </p>
+
+            <p>
+                <strong>Miles Remaining:</strong>
+                {{ maintenance_status.miles_remaining }} miles
+            </p>
+        {% else %}
+            <p>
+                <strong>Next Service:</strong>
+                Service required
+            </p>
+        {% endif %}
+        
+    </section>
+
     <section class="service-history">
 
         <h2>Service History</h2>
