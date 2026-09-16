@@ -31,6 +31,58 @@
         </p>
 
     </section>
+
+    <section class="service-history">
+
+        <h2>Service History</h2>
+        {% if service_records %}
+            {% for record in service_records %}
+
+            <article class="service-card">
+                <h3>{{ record.service_type }}</h3>
+
+                <p>
+                    <strong>Date:</strong>
+                    {{ record.service_date }}
+                </p>
+
+                <p>
+                    <strong>Mileage:</strong>
+                    {{ record.mileage }} miles
+                </p>
+
+                <p>
+                    <strong>Cost:</strong>
+                    £{{ record.cost }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {{ record.status }}
+                </p>
+
+                {% if record.notes %}
+                    <p>
+                        <strong>Notes:</strong>
+                        {{ record.notes }}
+                    </p>
+                {% endif %}
+
+                <a href="/services/{{ record.id }}/details">
+                    View Service Record
+                </a>
+                    
+            </article>
+
+            {% endfor %}
+
+        {% else %}
+
+        <p> No service records found for this vehicle</p>
+
+        {% endif %}
+    </section>
+    
     <div class="vehicle-actions">
 
         <a href="/vehicles/{{ vehicle.id }}/services/new">

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
 from app.models.vehicle import Vehicle
 from app.services.maintenance_service import get_maintenance_status
+from app.services.service_record_service import get_records_by_vehicle_id
 from app.services.vehicle_service import (
     get_all_vehicles,
     get_vehicle_by_id,
@@ -52,12 +53,13 @@ def get_vehicle(vehicle_id):
     if not vehicle:
         return "Vehicle not found", 404
 
+    service_records = get_records_by_vehicle_id(vehicle_id)
+
     return render_template(
         "vehicles/details.html",
-        vehicle = vehicle
+        vehicle = vehicle,
+        service_records = service_records
     )
-
-    return jsonify({"error": "Vehicle not found"}), 404
 
 
 @vehicle_bp.route("/vehicles", methods=["POST"])
