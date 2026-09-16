@@ -97,3 +97,109 @@ main {
     border-radius: 6px;
     margin-bottom: 20px;
 }
+
+.maintenance-due {
+    color: #b00020;
+    font-weight: bold;
+}
+
+.maintenance-ok {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.vehicles-needing-service {
+    margin-top: 40px;
+}
+
+.vehicles-needing-service h2 {
+    margin-bottom: 20px;
+}
+
+.vehicles-needing-service .service-card {
+    background-color: white;
+    padding: 24px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.vehicles-needing-service .service-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+
+.vehicles-needing-service .service-card p {
+    margin: 8px 0;
+}
+
+.vehicles-needing-service .service-card a {
+    display: inline-block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.recent-service-activity {
+    margin-top: 40px;
+}
+
+.recent-service-activity h2 {
+    margin-bottom: 20px;
+}
+
+.recent-service-activity .service-card {
+    background-color: white;
+    padding: 24px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.recent-service-activity .service-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.recent-service-activity .service-card p {
+    margin: 8px 0;
+}
+
+.recent-service-activity .service-card a {
+    display: inline-block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.status-completed,
+.status-progress,
+.status-scheduled,
+.status-cancelled {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.status-completed {
+    background-color: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-progress {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-scheduled {
+    background-color: #e7f1ff;
+    color: #0056b3;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}

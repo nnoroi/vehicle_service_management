@@ -31,7 +31,104 @@
         </p>
 
     </section>
+
+    <section class="maintenance-status">
+
+        <h2>Maintenance Status</h2>
+
+        <p>
+            <strong>Status:</strong>
+            {% if maintenance_status.status == "Service Due" %}
+                <span class="maintenance-due">
+                    Service Due
+                </span>
+            {% else %}
+                <span class="maintenance-ok">
+                    Service Not Due
+                </span>
+            {% endif %}
+        </p>
+
+        {% if maintenance_status.next_service_mileage %}
+            <p>
+                <strong>Next Service:</strong>
+                {{ maintenance_status.next_service_mileage }} miles
+            </p>
+
+            <p>
+                <strong>Miles Remaining:</strong>
+                {{ maintenance_status.miles_remaining }} miles
+            </p>
+        {% else %}
+            <p>
+                <strong>Next Service:</strong>
+                Service required
+            </p>
+        {% endif %}
+
+    </section>
+
+    <section class="service-history">
+
+        <h2>Service History</h2>
+        {% if service_records %}
+            {% for record in service_records %}
+
+            <article class="service-card">
+                <h3>{{ record.service_type }}</h3>
+
+                <p>
+                    <strong>Date:</strong>
+                    {{ record.service_date }}
+                </p>
+
+                <p>
+                    <strong>Mileage:</strong>
+                    {{ record.mileage }} miles
+                </p>
+
+                <p>
+                    <strong>Cost:</strong>
+                    £{{ record.cost }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {{ record.status }}
+                </p>
+
+                {% if record.notes %}
+                    <p>
+                        <strong>Notes:</strong>
+                        {{ record.notes }}
+                    </p>
+                {% endif %}
+
+                <a href="/services/{{ record.id }}/details">
+                    View Service Record
+                </a>
+                    
+            </article>
+
+            {% endfor %}
+
+        {% else %}
+
+        <p> No service records found for this vehicle</p>
+
+        {% endif %}
+    </section>
+
     <div class="vehicle-actions">
+
+        <a href="/vehicles/{{ vehicle.id }}/services/new">
+            Add Service Record
+        </a>
+
+        <a href="/vehicles/{{ vehicle.id }}/edit">
+            Edit Vehicle
+        </a>
+
         <a href="/vehicles">
             Back to Vehicles
         </a>

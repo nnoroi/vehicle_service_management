@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template, redirect
 
 from app.models.service_record import ServiceRecord
 from app.services.service_record_service import (
@@ -6,12 +6,26 @@ from app.services.service_record_service import (
     get_service_record_by_id,
     create_service_record,
     update_service_record,
-    delete_service_record
+    delete_service_record,
+    get_all_records
 )
 from app.services.vehicle_service import get_vehicle_by_id
 
 service_bp = Blueprint("services", __name__)
 
+@service_bp.route("/services")
+def get_services():
+    records = get_all_records()
+
+    vehicles = {}
+    for record in records:
+        vehicles[record.vehicle_id] = get_vehicle_by_id(record.vehicle_id)
+
+    return render_template(
+        "services/list.html",
+        records = records,
+        vehicles = vehicles
+    )
 
 @service_bp.route("/vehicles/<int:vehicle_id>/services")
 def get_vehicle_services(vehicle_id):
@@ -104,6 +118,47 @@ def create_vehicle_service(vehicle_id):
         "notes": service_record.notes
     }), 201
 
+@service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["GET"])
+def new_service(vehicle_id):
+    vehicle = get_vehicle_by_id(vehicle_id)
+
+    if not vehicle:
+        return "Vehicle not found", 404
+
+    return render_template(
+        "services/create.html",
+        vehicle = vehicle
+    )
+
+@service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["POST"])
+def submit_new_service(vehicle_id):
+    vehicle = get_vehicle_by_id(vehicle_id)
+
+    if not vehicle:
+        return "Vehicle not found", 404
+
+    record = ServiceRecord(
+        vehicle_id=vehicle_id,
+        service_type=request.form["service_type"],
+        service_date=request.form["service_date"],
+        mileage=int(request.form["mileage"]),
+        cost=float(request.form["cost"]),
+        status=request.form["status"],
+        notes=request.form.get("notes")
+    )
+
+    try:
+        create_service_record(record)
+    except ValueError as error:
+        return render_template(
+            "services/create.html",
+            vehicle = vehicle,
+            error = str(error),
+            record = record
+        )    
+
+    return redirect(f"/services/{record.id}/details")
+
 
 @service_bp.route("/services/<int:service_id>")
 def get_service(service_id):
@@ -124,6 +179,77 @@ def get_service(service_id):
         "status": record.status,
         "notes": record.notes
     }), 200
+
+
+
+@service_bp.route("/services/<int:service_id>/details")
+def service_details(service_id):
+    record = get_service_record_by_id(service_id)
+
+    if not record:
+        return "Service record not found", 404
+
+    vehicle = get_vehicle_by_id(record.vehicle_id)
+
+    return render_template(
+        "services/details.html",
+        record = record,
+        vehicle = vehicle
+    )
+
+@service_bp.route("/services/<int:service_id>/edit", methods=["GET"])
+def edit_service(service_id):
+    record = get_service_record_by_id(service_id)
+
+    if not record:
+        return "Service record not found", 404
+
+    vehicle = get_vehicle_by_id(record.vehicle_id)
+
+    return render_template(
+        "services/edit.html",
+        record = record,
+        vehicle = vehicle
+    )
+
+@service_bp.route("/services/<int:service_id>/edit", methods=["POST"])
+def submit_edit_service(service_id):
+    record = get_service_record_by_id(service_id)
+
+    if not record:
+        return "Service record not found", 404
+
+    record.service_type = request.form["service_type"]
+    record.service_date = request.form["service_date"]
+    record.mileage = int(request.form["mileage"])
+    record.cost = float(request.form["cost"])
+    record.status = request.form["status"]
+    record.notes = request.form.get("notes")
+
+    try:
+        update_service_record(record)
+    except ValueError as error:
+        vehicle = get_vehicle_by_id(record.vehicle_id)
+        return render_template(
+            "services/edit.html",
+            record=record,
+            vehicle=vehicle,
+            error=str(error)
+        )
+
+    return redirect(f"/services/{service_id}/details")
+    
+
+@service_bp.route("/services/<int:service_id>/delete", methods=["POST"])
+def submit_delete_service(service_id):
+    deleted = delete_service_record(service_id)
+
+    if not deleted:
+        return "Service record not found", 404
+
+    return redirect("/services")
+
+    
 
 
 @service_bp.route("/services/<int:service_id>", methods=["PUT"])

@@ -3,7 +3,8 @@ from app.services.dashboard_service import (
     get_total_vehicles,
     get_total_service_records,
     get_vehicles_needing_service,
-    get_dashboard_summary
+    get_dashboard_summary,
+    get_recent_service_records
 )
 
 
@@ -442,3 +443,137 @@ def test_get_dashboard_summary(monkeypatch):
         "total_service_records": 3,
         "vehicles_needing_service": 2
     }
+
+def test_get_recent_service_records(monkeypatch, test_database):
+    monkeypatch.setattr(
+        "app.services.dashboard_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 ECL",
+            "WDD12345678901232",
+            40000,
+            "Diesel"
+        )
+    )
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            1,
+            "Oil Change",
+            "2026-09-16",
+            40000,
+            75.00,
+            "Completed",
+            "Oil and filter changed."
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    records = get_recent_service_records()
+
+    assert len(records) == 1
+    assert records[0]["service_type"] == "Oil Change"
+    assert records[0]["make"] == "Mercedes-Benz"
+    assert records[0]["model"] == "E-Class"
+    assert records[0]["service_date"] == "2026-09-16"
+    assert records[0]["mileage"] == 40000
+    assert records[0]["cost"] == 75.00
+    assert records[0]["status"] == "Completed"
+
+def test_get_recent_service_records_limit(monkeypatch, test_database):
+    monkeypatch.setattr(
+        "app.services.dashboard_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 ECL",
+            "WDD12345678901232",
+            40000,
+            "Diesel"
+        )
+    )
+
+    for number in range(6):
+        connection.execute(
+            """
+            INSERT INTO service_records (
+                vehicle_id,
+                service_type,
+                service_date,
+                mileage,
+                cost,
+                status,
+                notes
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                1,
+                f"Service {number}",
+                f"2026-09-{10 + number}",
+                30000 + number,
+                100.00,
+                "Completed",
+                "Test service record."
+            )
+        )
+
+    connection.commit()
+    connection.close()
+
+    records = get_recent_service_records()
+
+    assert len(records) == 5

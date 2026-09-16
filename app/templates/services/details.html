@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="service-details">
+
+    <header class="page-header">
+        <h1>{{ record.service_type }}</h1>
+        <p>
+           <strong>Make:</strong>{{ vehicle.make }}<br>
+           <strong>Model:</strong>{{ vehicle.model }}<br>
+           <strong>Year:</strong> {{ vehicle.year }}</p>
+    </header>
+
+    <section class="service-information">
+        <p>
+            <strong>Status:</strong>
+            {{ record.status }}
+        </p>
+
+        <p>
+            <strong>Service Date:</strong>
+            {{ record.service_date }}
+        </p>
+
+        <p>
+            <strong>Mileage:</strong>
+            {{ record.mileage }} miles
+        </p>
+
+        <p>
+            <strong>Cost:</strong>
+            £{{ record.cost }}
+        </p>
+
+        {% if record.notes %}
+            <p>
+                <strong>Notes:</strong>
+                {{ record.notes }}
+            </p>
+        {% endif %}
+    </section>
+
+    <div class="service-actions">
+
+        <a href="/services/{{ record.id }}/edit">
+            Edit Service Record
+        </a>
+
+        <a href="/services">
+            Back to Services
+        </a>
+
+        <form
+            method="POST"
+            action="/services/{{ record.id }}/delete"
+            onsubmit="return confirm('Are you sure you want to delete this service record?');"
+            >
+            <button type="submit">
+                Delete Service Record
+            </button>
+        </form>
+        
+    </div>
+</section>
+
+{% endblock %}

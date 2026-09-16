@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<section class="service-page">
+    <header class="page-header">
+        <h1>Service Records</h1>
+        <p>Manage service records for your Mercedes vehicles</p>
+    </header>
+
+    <section class="service-list">
+
+        {% if records %}
+            {% for record in records %}
+
+            <article class="service-card">
+
+                <div class="service-card-header">
+                    <h2>{{ record.service_type }}</h2>
+                    <span>{{ record.status }}</span>
+                </div>
+
+                <div class="service-card-details">
+                    <p>
+                        <strong>Vehicle:</strong>
+                        {{ vehicles[record.vehicle_id].make }}
+                        {{ vehicles[record.vehicle_id].model }}
+                        — {{ vehicles[record.vehicle_id].year }}
+                    </p>
+
+                    <p>
+                        <strong>Service Date:</strong>
+                        {{ record.service_date }}
+                    </p>
+
+                    <p>
+                        <strong>Mileage</strong>
+                        {{ record.mileage }} miles
+                    </p>
+
+                    <p>
+                        <strong>Cost:</strong>
+                        £{{ record.cost }}
+                    </p>
+
+                    {% if record.notes %}
+                        <p>
+                            <strong>Notes:</strong>
+                            {{ record.notes }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <a href="/services/{{ record.id }}/details">
+                    View Service Record
+                </a>
+            </article>
+            {% endfor %}
+        {% else %}
+
+            <p>No service records found</p>
+
+        {% endif %}
+    </section>
+</section>
+{% endblock %}
