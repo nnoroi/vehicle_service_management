@@ -42,7 +42,7 @@ def test_get_vehicles(test_database, monkeypatch):
 
     assert response.status_code == 200
     assert b"Vehicles" in response.data
-    assert b"Mercedes-Benz" in response.data   
+    assert b"Mercedes-Benz" in response.data
     assert b"E-Class" in response.data
     assert b"MB25 ABC" in response.data
 
@@ -87,7 +87,6 @@ def test_get_vehicle(test_database, monkeypatch):
     with app.test_client() as client:
         response = client.get(f"/vehicles/{vehicle_id}")
 
-        
     assert response.status_code == 200
     assert b"Mercedes-Benz" in response.data
     assert b"E-Class" in response.data
@@ -533,9 +532,6 @@ def test_get_non_existed_vehicle_maintenance(monkeypatch, test_database):
     assert data["error"] == "Vehicle not found."
 
 
-
-
-
 def test_add_vehicle(test_database, monkeypatch):
     monkeypatch.setattr(
         "app.services.vehicle_service.get_connection",
@@ -679,3 +675,13 @@ def test_delete_vehicle_page(test_database, monkeypatch):
     connection.close()
 
     assert row is None
+
+
+def test_get_vehicle_not_found():
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.get("/vehicles/9999")
+
+    assert response.status_code == 404
+    assert b"Vehicle not found" in response.data
