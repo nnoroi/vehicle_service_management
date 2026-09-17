@@ -629,3 +629,13 @@ def test_get_service_not_found():
         data = response.get_json()
 
         assert data["error"] == "Service record not found."
+
+
+def test_service_details_not_found():
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.get("/services/9999/details")
+
+    assert response.status_code == 404
+    assert b"Service record not found" in response.data
