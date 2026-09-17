@@ -36,7 +36,6 @@ def get_vehicles_needing_service():
     return total
 
 
-
 def get_dashboard_summary():
     total_vehicles = get_total_vehicles()
     total_service_records = get_total_service_records()
@@ -47,7 +46,6 @@ def get_dashboard_summary():
         "total_service_records": total_service_records,
         "vehicles_needing_service": total_vehicles_needing_service
     }
-
 
 
 def get_vehicles_needing_service_list():
@@ -84,22 +82,6 @@ def get_vehicles_needing_service_list():
 
     return vehicles
 
-
-def get_vehicle_service_record_count(vehicle_id):
-    connection = get_connection()
-
-    row = connection.execute(
-        """
-        SELECT COUNT(*) AS total
-        FROM service_records
-        WHERE vehicle_id = ?
-        """,
-        (vehicle_id,)
-    ).fetchone()
-
-    connection.close()
-
-    return row["total"]
 
 def get_recent_service_records(limit=5):
     connection = get_connection()
