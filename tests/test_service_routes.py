@@ -674,11 +674,53 @@ def test_create_vehicle_service_vehicle_not_found():
     assert data["error"] == "Vehicle not found."
 
 
-def test_create_vehicle_service_missing_fields():
+def test_create_vehicle_service_missing_fields(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    cursor = connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "C-Class",
+            2024,
+            "MB24 CLC",
+            "W1K12345678901234",
+            15000,
+            "Petrol"
+        )
+    )
+
+    vehicle_id = cursor.lastrowid
+
+    connection.commit()
+    connection.close()
+
     app = create_app()
+
     with app.test_client() as client:
         response = client.post(
-            "/vehicles/1/services",
+            f"/vehicles/{vehicle_id}/services",
             json={
                 "service_type": "Oil Change",
             }
@@ -689,7 +731,9 @@ def test_create_vehicle_service_missing_fields():
     data = response.get_json()
 
     assert data["error"] == "Missing required fields"
-    assert "service_date" in data["fields"]
-    assert "mileage" in data["fields"]
-    assert "cost" in data["fields"]
-    assert "status" in data["fields"]
+    assert data["fields"] == [
+        "service_date",
+        "mileage",
+        "cost",
+        "status"
+    ]
