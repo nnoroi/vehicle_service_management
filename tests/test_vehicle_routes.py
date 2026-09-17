@@ -685,3 +685,38 @@ def test_get_vehicle_not_found():
 
     assert response.status_code == 404
     assert b"Vehicle not found" in response.data
+
+
+def test_create_vehicle_missing_json():
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post("/vehicles")
+
+    assert response.status_code == 400
+    data = response.get_json()
+
+    assert data["error"] == "Request body must contain JSON data"
+
+
+def test_create_vehicle_missing_fields():
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles",
+            json={
+                "make": "Mercedes-Benz",
+                "model": "E-Class"
+            }
+        )
+
+    assert response.status_code == 400
+
+    data = response.get_json()
+
+    assert data["error"] == "Missing required fields"
+    assert "year" in data["fields"]
+    assert "registration" in data["fields"]
+    assert "mileage" in data["fields"]
+    assert "fuel_type" in data["fields"]
