@@ -13,6 +13,7 @@ from app.services.vehicle_service import get_vehicle_by_id
 
 service_bp = Blueprint("services", __name__)
 
+
 @service_bp.route("/services")
 def get_services():
     records = get_all_records()
@@ -23,9 +24,10 @@ def get_services():
 
     return render_template(
         "services/list.html",
-        records = records,
-        vehicles = vehicles
+        records=records,
+        vehicles=vehicles
     )
+
 
 @service_bp.route("/vehicles/<int:vehicle_id>/services")
 def get_vehicle_services(vehicle_id):
@@ -53,8 +55,7 @@ def get_vehicle_services(vehicle_id):
     ])
 
 
-@service_bp.route("/vehicles/<int:vehicle_id>/services", methods=["POST"]
-                  )
+@service_bp.route("/vehicles/<int:vehicle_id>/services", methods=["POST"])
 def create_vehicle_service(vehicle_id):
     data = request.get_json(silent=True)
 
@@ -118,6 +119,7 @@ def create_vehicle_service(vehicle_id):
         "notes": service_record.notes
     }), 201
 
+
 @service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["GET"])
 def new_service(vehicle_id):
     vehicle = get_vehicle_by_id(vehicle_id)
@@ -127,8 +129,9 @@ def new_service(vehicle_id):
 
     return render_template(
         "services/create.html",
-        vehicle = vehicle
+        vehicle=vehicle
     )
+
 
 @service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["POST"])
 def submit_new_service(vehicle_id):
@@ -152,10 +155,10 @@ def submit_new_service(vehicle_id):
     except ValueError as error:
         return render_template(
             "services/create.html",
-            vehicle = vehicle,
-            error = str(error),
-            record = record
-        )    
+            vehicle=vehicle,
+            error=str(error),
+            record=record
+        )
 
     return redirect(f"/services/{record.id}/details")
 
@@ -181,7 +184,6 @@ def get_service(service_id):
     }), 200
 
 
-
 @service_bp.route("/services/<int:service_id>/details")
 def service_details(service_id):
     record = get_service_record_by_id(service_id)
@@ -193,9 +195,10 @@ def service_details(service_id):
 
     return render_template(
         "services/details.html",
-        record = record,
-        vehicle = vehicle
+        record=record,
+        vehicle=vehicle
     )
+
 
 @service_bp.route("/services/<int:service_id>/edit", methods=["GET"])
 def edit_service(service_id):
@@ -208,9 +211,10 @@ def edit_service(service_id):
 
     return render_template(
         "services/edit.html",
-        record = record,
-        vehicle = vehicle
+        record=record,
+        vehicle=vehicle
     )
+
 
 @service_bp.route("/services/<int:service_id>/edit", methods=["POST"])
 def submit_edit_service(service_id):
@@ -238,7 +242,7 @@ def submit_edit_service(service_id):
         )
 
     return redirect(f"/services/{service_id}/details")
-    
+
 
 @service_bp.route("/services/<int:service_id>/delete", methods=["POST"])
 def submit_delete_service(service_id):
@@ -248,8 +252,6 @@ def submit_delete_service(service_id):
         return "Service record not found", 404
 
     return redirect("/services")
-
-    
 
 
 @service_bp.route("/services/<int:service_id>", methods=["PUT"])

@@ -639,3 +639,57 @@ def test_service_details_not_found():
 
     assert response.status_code == 404
     assert b"Service record not found" in response.data
+
+
+def test_create_vehicle_service_missing_json():
+    app = create_app()
+    with app.test_client() as client:
+        response = client.post("/vehicles/9999/services")
+
+    assert response.status_code == 400
+
+    data = response.get_json()
+
+    assert data["error"] == "Request body must contain JSON data"
+
+
+def test_create_vehicle_service_vehicle_not_found():
+    app = create_app()
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles/9999/services",
+            json={
+                "service_type": "Oil Change",
+                "service_date": "2026-09-17",
+                "mileage": 40000,
+                "cost": 75.00,
+                "status": "Completed"
+            }
+        )
+
+    assert response.status_code == 404
+
+    data = response.get_json()
+
+    assert data["error"] == "Vehicle not found."
+
+
+def test_create_vehicle_service_missing_fields():
+    app = create_app()
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles/1/services",
+            json={
+                "service_type": "Oil Change",
+            }
+        )
+
+    assert response.status_code == 400
+
+    data = response.get_json()
+
+    assert data["error"] == "Missing required fields"
+    assert "service_date" in data["fields"]
+    assert "mileage" in data["fields"]
+    assert "cost" in data["fields"]
+    assert "status" in data["fields"]
