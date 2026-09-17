@@ -8,8 +8,8 @@ def test_get_vehicle_services(test_database, monkeypatch):
     )
 
     monkeypatch.setattr(
-    "app.services.vehicle_service.get_connection",
-    test_database
+        "app.services.vehicle_service.get_connection",
+        test_database
     )
 
     connection = test_database()
@@ -93,8 +93,8 @@ def test_get_vehicle_services_empty(test_database, monkeypatch):
     )
 
     monkeypatch.setattr(
-    "app.services.vehicle_service.get_connection",
-    test_database
+        "app.services.vehicle_service.get_connection",
+        test_database
     )
     connection = test_database()
 
@@ -616,3 +616,16 @@ def test_delete_service_not_found(monkeypatch, test_database):
     data = response.get_json()
 
     assert data["error"] == "Service record not found."
+
+
+def test_get_service_not_found():
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.get("/services/9999")
+
+        assert response.status_code == 404
+
+        data = response.get_json()
+
+        assert data["error"] == "Service record not found."
