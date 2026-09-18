@@ -5,28 +5,51 @@ body {
     color: #222;
 }
 
-nav {
+.navbar {
     background-color: #111;
-    padding: 15px 30px;
+    border-bottom: 1px solid #333;
 }
 
-nav a {
-    color:white;
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+
+.brand {
+    color: white;
     text-decoration: none;
-    margin-right: 25px;
     font-weight: bold;
+    font-size: 18px;
 }
 
-
-nav a:hover {
-    text-decoration: underline;
+.nav-links {
+    display: flex;
+    gap: 25px;
 }
 
-main {
+.nav-links a {
+    color: #ddd;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.main-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 20px;
 }
+
 
 .dashboard-header {
     margin-bottom: 30px;
@@ -54,10 +77,12 @@ main {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.stat-card:hover{
+
+.stat-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
+
 .stat-card h2 {
     font-size: 17px;
     margin-top: 0;
@@ -76,16 +101,18 @@ main {
         grid-template-columns: 1fr;
     }
 
-    main {
+    .main-container {
         padding: 30px 15px;
     }
 
-    nav {
-        padding: 15px;
+    .navbar-container {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    nav a {
-        margin-right: 15px;
+    .nav-links {
+        gap: 15px;
+        flex-wrap: wrap;
     }
 }
 

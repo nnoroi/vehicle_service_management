@@ -4,20 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercedes Vehicle Service Management</title>
+    <title>{% block title %} Mercedes Vehicle Service Management {% endblock %}</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-    <nav>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/vehicles">Vehicles</a>
-        <a href="/services">Services</a>
+    <nav class="navbar-container">
+        <div class="navbar-container">
+
+            <a class="brand" href="{{ url_for('dashboard.dashboard') }}">
+                Mercedes Vehicle Service Management
+            </a>
+
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('vehicles.get_vehicles') }}">Vehicles</a>
+                <a href="{{ url_for('services.get_services') }}">Services</a>
+            </div>
+
+        </div>
     </nav>
 
-    <main>
+
+    <main class="main-container">
         {% block content %}
         {% endblock %}
     </main>
