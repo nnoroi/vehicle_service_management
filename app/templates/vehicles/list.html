@@ -5,56 +5,72 @@
 <section class="vehicles-page">
 
     <header class="page-header">
-        <h1>Vehicles</h1>
-        <p>Manage your Mercedes vehicles and their service information</p>
+
+        <div>
+            <h1>Vehicles</h1>
+            <p>Manage your Mercedes vehicles and their service information</p>
+        </div>
+
+        <a href="/vehicles/add" class="add-button">
+            + Add Vehicle
+        </a>
+
     </header>
 
     <section class="vehicle-list">
 
         {% if vehicles %}
-            {% for vehicle in vehicles %}
-                <article class="vehicle-card">
+        {% for vehicle in vehicles %}
+        <article class="vehicle-card">
 
-                    <div class="vehicle-card-header">
-                        <h2>{{ vehicle.make }} {{ vehicle.model }}</h2>
-                        <span>{{ vehicle.year }}</span>
-                    </div>
+            <div class="vehicle-card-header">
+                <h2>{{ vehicle.make }} {{ vehicle.model }}</h2>
+                <span>{{ vehicle.year }}</span>
+            </div>
 
-                    <div class="vehicle-card-details">
+            <div class="vehicle-card-details">
 
-                        <p>
-                            <strong>Registration:</strong>
-                            {{ vehicle.registration }}
-                        </p>
+                <p>
+                    <strong>Registration:</strong>
+                    {{ vehicle.registration }}
+                </p>
 
-                        <p>
-                            <strong>VIN:</strong>
-                            {{ vehicle.vin }}
-                        </p>
+                <p>
+                    <strong>VIN:</strong>
+                    {{ vehicle.vin }}
+                </p>
 
-                        <p>
-                            <strong>Mileage:</strong>
-                            {{ vehicle.mileage }} miles
-                        </p>
+                <p>
+                    <strong>Mileage:</strong>
+                    {{ vehicle.mileage }} miles
+                </p>
 
-                        <p>
-                            <strong>Fuel Type:</strong>
-                            {{ vehicle.fuel_type }}
-                        </p>
+                <p>
+                    <strong>Fuel Type:</strong>
+                    {{ vehicle.fuel_type }}
+                </p>
 
-                    </div>
+            </div>
 
-                    <a href="/vehicles/{{ vehicle.id }}">
-                        View Vehicle
-                    </a>
+            <div class="vehicle-card-actions">
+                <a href="/vehicles/{{ vehicle.id }}" class="view-button">
+                    View Vehicle
+                </a>
 
-                </article>
+                <a href="/vehicles/{{ vehicle.id }}/edit" class="edit-button">
+                    Edit
+                </a>
 
-            {% endfor %}
+            </div>
+
+
+        </article>
+
+        {% endfor %}
 
         {% else %}
 
-            <p>No vehicles found.</p>
+        <p class="empty-message">No vehicles found.</p>
 
         {% endif %}
 
