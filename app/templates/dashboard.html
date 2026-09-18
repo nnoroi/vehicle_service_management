@@ -5,8 +5,10 @@
 <section class="dashboard">
 
     <header class="dashboard-header">
-        <h1>Dashboard</h1>
-        <p>Overview of your Mercedes vehicle service management system.</p>
+        <div>
+            <h1>Dashboard</h1>
+            <p>Overview of your Mercedes vehicle service management system.</p>
+        </div>
     </header>
 
     <section class="dashboard-stats">
@@ -32,38 +34,38 @@
         <h2>Vehicles Needing Service</h2>
 
         {% if vehicles_needing_service_list %}
-        
-            {% for vehicle in vehicles_needing_service_list %}
 
-            <article class="service-card">
-                <h3>
-                    {{ vehicle["make"] }} {{ vehicle["model"] }}
-                </h3>
+        {% for vehicle in vehicles_needing_service_list %}
 
-                <p>
-                    <strong>Year:</strong>
-                    {{ vehicle["year"] }}
-                </p>
+        <article class="service-card">
+            <h3>
+                {{ vehicle["make"] }} {{ vehicle["model"] }}
+            </h3>
 
-                <p>
-                    <strong>Mileage:</strong>
-                    {{ vehicle["mileage"] }} miles
-                </p>
+            <p>
+                <strong>Year:</strong>
+                {{ vehicle["year"] }}
+            </p>
 
-                <p>
-                    <strong>Service Records:</strong>
-                    {{ vehicle["service_record_count"] }}
-                </p>
+            <p>
+                <strong>Mileage:</strong>
+                {{ vehicle["mileage"] }} miles
+            </p>
 
-                <a href="/vehicles/{{ vehicle['id'] }}">
-                    View Vehicle
-                </a>
-            </article>
-            {% endfor %}
+            <p>
+                <strong>Service Records:</strong>
+                {{ vehicle["service_record_count"] }}
+            </p>
+
+            <a href="/vehicles/{{ vehicle['id'] }}">
+                View Vehicle
+            </a>
+        </article>
+        {% endfor %}
 
         {% else %}
 
-            <p>No vehicles currently need service</p>
+        <p>No vehicles currently need service</p>
 
         {% endif %}
 
@@ -73,61 +75,61 @@
 
         <h2>Recent Service Activity</h2>
 
-            {% if recent_service_records %}
+        {% if recent_service_records %}
 
-                {% for record in recent_service_records %}
+        {% for record in recent_service_records %}
 
-                    <article class="service-card">
+        <article class="service-card">
 
-                        <h3>{{ record["service_type"] }}</h3>
+            <h3>{{ record["service_type"] }}</h3>
 
-                        <p>
-                            <strong>Vehicle:</strong>
-                            {{ record["make"] }} {{ record["model"] }}
-                        </p>
+            <p>
+                <strong>Vehicle:</strong>
+                {{ record["make"] }} {{ record["model"] }}
+            </p>
 
-                        <p>
-                            <strong>Date:</strong>
-                            {{ record["service_date"] }}
-                        </p>
+            <p>
+                <strong>Date:</strong>
+                {{ record["service_date"] }}
+            </p>
 
-                        <p>
-                            <strong>Mileage:</strong>
-                            {{ record["mileage"] }} miles
-                        </p>
+            <p>
+                <strong>Mileage:</strong>
+                {{ record["mileage"] }} miles
+            </p>
 
-                        <p>
-                            <strong>Cost:</strong>
-                            £{{ record["cost"] }}
-                        </p>
+            <p>
+                <strong>Cost:</strong>
+                £{{ record["cost"] }}
+            </p>
 
-                        <p>
-                            <strong>Status:</strong>
-                            
-                            {% if record["status"] == "Completed" %}
-                                <span class="status-completed">Completed</span>
-                            {% elif record["status"] == "In Progress" %}
-                                <span class="status-progress">In Progress</span>
-                            {% elif record["status"] == "Scheduled" %}
-                                <span class="status-scheduled">Scheduled</span>
-                            {% else %}
-                                <span class="status-cancelled">Cancelled</span>
-                            {% endif %}
-                        </p>
+            <p>
+                <strong>Status:</strong>
 
-                        <a href="/services/{{ record['id'] }}/details">
-                            View Service Record
-                        </a>
+                {% if record["status"] == "Completed" %}
+                <span class="status-completed">Completed</span>
+                {% elif record["status"] == "In Progress" %}
+                <span class="status-progress">In Progress</span>
+                {% elif record["status"] == "Scheduled" %}
+                <span class="status-scheduled">Scheduled</span>
+                {% else %}
+                <span class="status-cancelled">Cancelled</span>
+                {% endif %}
+            </p>
 
-                    </article>
+            <a href="/services/{{ record['id'] }}/details">
+                View Service Record
+            </a>
 
-                {% endfor %}
+        </article>
 
-            {% else %}
+        {% endfor %}
 
-                <p>No recent service activity.</p>
+        {% else %}
 
-            {% endif %}
+        <p>No recent service activity.</p>
+
+        {% endif %}
 
     </section>
 
