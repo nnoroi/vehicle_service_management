@@ -145,31 +145,39 @@ body {
 
 .vehicles-needing-service h2 {
     margin-bottom: 20px;
+    font-size: 22px;
 }
 
 .vehicles-needing-service .service-card {
     background-color: white;
     padding: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #ddd;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
 }
 
 .vehicles-needing-service .service-card h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
+    margin: 0 0 16px 0;
+    margin-bottom: 19px;
 }
 
 
 .vehicles-needing-service .service-card p {
     margin: 8px 0;
+    color: #555;
 }
 
 .vehicles-needing-service .service-card a {
     display: inline-block;
-    margin-top: 12px;
+    margin-top: 14px;
+    color: #222;
     font-weight: bold;
+    text-decoration: none;
+}
+
+.vehicles-needing-service .service-card a:hover {
+    text-decoration: underline;
 }
 
 .recent-service-activity {
