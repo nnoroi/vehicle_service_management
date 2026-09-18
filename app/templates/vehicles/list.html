@@ -11,6 +11,10 @@
             <p>Manage your Mercedes vehicles and their service information</p>
         </div>
 
+        <span class="vehicle-count">
+            {{ vehicles|length }} vehicle{% if vehicles|length != 1 %}s{% endif %}
+        </span>
+
         <a href="/vehicles/add" class="add-button">
             + Add Vehicle
         </a>

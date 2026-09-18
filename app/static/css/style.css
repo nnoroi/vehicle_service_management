@@ -407,3 +407,15 @@ body {
 .vehicle-list {
     width: 100%;
 }
+
+.vehicle-count {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 5px 10px;
+    background-color: #20242a;
+    border: 1px solid #2f353d;
+    border-radius: 6px;
+    color: #a6adb7;
+    font-size: 13px;
+    font-weight: 600;
+}
