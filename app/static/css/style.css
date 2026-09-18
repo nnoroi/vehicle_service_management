@@ -1,13 +1,13 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #222;
+    background-color: #0d0f12;
+    color: #f1f3f5;
 }
 
 .navbar {
-    background-color: #111;
-    border-bottom: 1px solid #333;
+    background-color: #08090b;
+    border-bottom: 1px solid #2a2f36;
 }
 
 .navbar-container {
@@ -22,7 +22,7 @@ body {
 
 
 .brand {
-    color: white;
+    color: #f1f3f5;
     text-decoration: none;
     font-weight: bold;
     font-size: 18px;
@@ -34,14 +34,14 @@ body {
 }
 
 .nav-links a {
-    color: #ddd;
+    color: #a6adb7;
     text-decoration: none;
     font-weight: bold;
     transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
-    color: white;
+    color: #f1f3f5;
 }
 
 .main-container {
@@ -62,7 +62,7 @@ body {
 
 .dashboard-header p {
     margin: 0;
-    color: #666;
+    color: #a6adb7;
     font-size: 16px;
 }
 
@@ -74,24 +74,24 @@ body {
 }
 
 .stat-card {
-    background-color: white;
+    background-color: #171a1f;
     padding: 28px;
     border-radius: 12px;
-    border: 1px solid #ddd;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #2a2f36;
+    box-shadow: none;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .stat-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    background-color: #1d2127;
 }
 
 .stat-card h2 {
     font-size: 15px;
     font-weight: normal;
     margin: 0 0 12px 0;
-    color: #666;
+    color: #a6adb7;
 }
 
 .stat-card p {
@@ -149,29 +149,28 @@ body {
 }
 
 .vehicles-needing-service .service-card {
-    background-color: white;
+    background-color: #171a1f;
     padding: 24px;
     margin-bottom: 16px;
     border-radius: 10px;
-    border: 1px solid #ddd;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    border: 1px solid #2a2f36;
+    box-shadow: none;
 }
 
 .vehicles-needing-service .service-card h3 {
-    margin: 0 0 16px 0;
-    margin-bottom: 19px;
+    margin: 0 0 19px 0;
 }
 
 
 .vehicles-needing-service .service-card p {
     margin: 8px 0;
-    color: #555;
+    color: #a6adb7;
 }
 
 .vehicles-needing-service .service-card a {
     display: inline-block;
     margin-top: 14px;
-    color: #222;
+    color: #f1f3f5;
     font-weight: bold;
     text-decoration: none;
 }
@@ -190,12 +189,12 @@ body {
 }
 
 .recent-service-activity .service-card {
-    background-color: white;
+    background-color: #171a1f;
     padding: 24px;
     margin-bottom: 16px;
     border-radius: 10px;
-    border: 1px solid #ddd;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+    border: 1px solid #2a2f36;
+    box-shadow: none;
 }
 
 .recent-service-activity .service-card h3 {
@@ -205,13 +204,13 @@ body {
 
 .recent-service-activity .service-card p {
     margin: 8px 0;
-    color: #555;
+    color: #a6adb7;
 }
 
 .recent-service-activity .service-card a {
     display: inline-block;
     margin-top: 14px;
-    color: #222;
+    color: #f1f3f5;
     font-weight: bold;
     text-decoration: none;
 }
