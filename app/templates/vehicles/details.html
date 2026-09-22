@@ -3,32 +3,38 @@
 {% block content %}
 
 <section class="vehicle-details">
-    <header class="page-header">
+
+    <div>
+        <p class="vehicle-label">VEHICLE</p>
         <h1>{{ vehicle.make }} {{ vehicle.model }}</h1>
-        <p>{{ vehicle.year }}</p>
-    </header>
+        <p class="vehicle-year">{{ vehicle.year }}</p>
+    </div>
+
+    <a href="/vehicles/{{ vehicle.id }}/edit" class="edit-button">
+        Edit Vehicle
+    </a>
 
     <section class="vehicle-information">
 
-        <p>
-            <strong>Registration:</strong>
-            {{ vehicle.registration }}
-        </p>
+        <div class="information-item">
+            <span>Registration:</span>
+            <strong>{{ vehicle.registration }}</strong>
+        </div>
 
-        <p>
-            <strong>VIN:</strong>
-            {{ vehicle.vin }}
-        </p>
+        <div class="information-item">
+            <span>VIN:</span>
+            <strong>{{ vehicle.vin }}</strong>
+        </div>
 
-        <p>
-            <strong>Mileage</strong>
-            {{ vehicle.mileage }} miles
-        </p>
+        <div class="information-item">
+            <span>Mileage</span>
+            <strong>{{ vehicle.mileage }} miles</strong>
+        </div>
 
-        <p>
-            <strong>Fuel Type:</strong>
-            {{ vehicle.fuel_type }}
-        </p>
+        <div class="information-item">
+            <span>Fuel Type:</span>
+            <strong>{{ vehicle.fuel_type }}</strong>
+        </div>
 
     </section>
 
@@ -39,31 +45,31 @@
         <p>
             <strong>Status:</strong>
             {% if maintenance_status.status == "Service Due" %}
-                <span class="maintenance-due">
-                    Service Due
-                </span>
+            <span class="maintenance-due">
+                Service Due
+            </span>
             {% else %}
-                <span class="maintenance-ok">
-                    Service Not Due
-                </span>
+            <span class="maintenance-ok">
+                Service Not Due
+            </span>
             {% endif %}
         </p>
 
         {% if maintenance_status.next_service_mileage %}
-            <p>
-                <strong>Next Service:</strong>
-                {{ maintenance_status.next_service_mileage }} miles
-            </p>
+        <p>
+            <strong>Next Service:</strong>
+            {{ maintenance_status.next_service_mileage }} miles
+        </p>
 
-            <p>
-                <strong>Miles Remaining:</strong>
-                {{ maintenance_status.miles_remaining }} miles
-            </p>
+        <p>
+            <strong>Miles Remaining:</strong>
+            {{ maintenance_status.miles_remaining }} miles
+        </p>
         {% else %}
-            <p>
-                <strong>Next Service:</strong>
-                Service required
-            </p>
+        <p>
+            <strong>Next Service:</strong>
+            Service required
+        </p>
         {% endif %}
 
     </section>
@@ -72,45 +78,45 @@
 
         <h2>Service History</h2>
         {% if service_records %}
-            {% for record in service_records %}
+        {% for record in service_records %}
 
-            <article class="service-card">
-                <h3>{{ record.service_type }}</h3>
+        <article class="service-card">
+            <h3>{{ record.service_type }}</h3>
 
-                <p>
-                    <strong>Date:</strong>
-                    {{ record.service_date }}
-                </p>
+            <p>
+                <strong>Date:</strong>
+                {{ record.service_date }}
+            </p>
 
-                <p>
-                    <strong>Mileage:</strong>
-                    {{ record.mileage }} miles
-                </p>
+            <p>
+                <strong>Mileage:</strong>
+                {{ record.mileage }} miles
+            </p>
 
-                <p>
-                    <strong>Cost:</strong>
-                    £{{ record.cost }}
-                </p>
+            <p>
+                <strong>Cost:</strong>
+                £{{ record.cost }}
+            </p>
 
-                <p>
-                    <strong>Status:</strong>
-                    {{ record.status }}
-                </p>
+            <p>
+                <strong>Status:</strong>
+                {{ record.status }}
+            </p>
 
-                {% if record.notes %}
-                    <p>
-                        <strong>Notes:</strong>
-                        {{ record.notes }}
-                    </p>
-                {% endif %}
+            {% if record.notes %}
+            <p>
+                <strong>Notes:</strong>
+                {{ record.notes }}
+            </p>
+            {% endif %}
 
-                <a href="/services/{{ record.id }}/details">
-                    View Service Record
-                </a>
-                    
-            </article>
+            <a href="/services/{{ record.id }}/details">
+                View Service Record
+            </a>
 
-            {% endfor %}
+        </article>
+
+        {% endfor %}
 
         {% else %}
 
@@ -139,4 +145,4 @@
             </button>
         </form>
     </div>
-{% endblock %}
+    {% endblock %}
