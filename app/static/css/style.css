@@ -1551,3 +1551,98 @@ color: #a6adb7;
 .cancel-vehicle-button:hover {
     background-color: #20242a;
 }
+
+.vehicle-edit {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.vehicle-edit-header {
+    margin-bottom: 30px;
+}
+
+.vehicle-edit-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #8d96a3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.vehicle-edit-header h1 {
+    margin: 0;
+    color: #a6adb7;
+    font-size: 15px;
+}
+
+.vehicle-edit-header p {
+    margin: 0;
+    color: #a6adb7;
+    font-size: 15px;
+}
+
+.vehicle-edit-header p span {
+    margin-left: 8px;
+    color: #8d96a3;
+}
+
+.vehicle-edit form {
+    width: 100%;
+}
+
+.vehicle-edit-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 24px;
+    background-color: #15181d;
+    border: 1px solid #2a2f36;
+    border-radius: 12px;
+}
+
+.vehicle-edit-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.save-vehicle-button,
+.cancel-vehicle-button {
+    width: 150px;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.save-vehicle-button {
+    background-color: #f1f3f5;
+    color: #0d0f12;
+    border: 1px solid #f1f3f5;
+}
+
+.save-vehicle-button:hover {
+    background-color: #d9dde2;
+}
+
+.vehicle-edit-year {
+    display: block;
+    width: fit-content;
+    margin-top: 8px;
+    margin-bottom: 6px;
+    padding: 5px 10px;
+    background-color: #20242a;
+    border: 1px solid #343a43;
+    border-radius: 6px;
+    color: #a6adb7;
+    font-size: 13px;
+    font-weight: 600;
+}
