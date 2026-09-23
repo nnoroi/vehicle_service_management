@@ -759,3 +759,47 @@ color: #a6adb7;
     margin-top: -18px;
     margin-bottom: 30px;
 }
+
+.vehicle-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid #2a2f36;
+}
+
+.vehicle-actions a,
+.vehicle-actions button {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.vehicle-actions a {
+    background-color: transparent;
+    color: #f1f3f5;
+    border: 1px solid #3a414a;
+}
+
+.vehicle-actions a:hover {
+    background-color: #20242a;
+}
+
+.vehicle-actions form {
+    margin-left: auto;
+}
+
+.vehicle-actions button {
+    background-color: transparent;
+    color: #ff8a8a;
+    border: 1px solid #5a3030;
+}
+
+.vehicle-actions button:hover {
+    background-color: #3a2020;
+}
