@@ -75,14 +75,63 @@
         <form
             method="POST"
             action="/services/{{ record.id }}/delete"
-            onsubmit="return confirm('Are you sure you want to delete this service record?');"
+            id="delete-service-form"
             >
-            <button type="submit" class="delete-service-button">
+            <button 
+            type="button" 
+            class="delete-service-button"
+            onclick="openServiceDeleteModal()"
+            >
                 Delete Service Record
             </button>
         </form>
-        
     </div>
 </section>
 
+<div id="delete-service-modal" class="delete-modal">
+
+    <div class="delete-modal-content">
+
+        <span class="delete-modal-label">DELETE SERVICE RECORD</span>
+        
+        <h2>Delete {{ record.service_type }}</h2>
+
+         <p>
+            This will permanently delete this service record.
+            This action cannot be undone.
+        </p>
+
+        <div class="delete-modal-actions">
+
+            <button 
+                type="button"
+                class="cancel-delete-button"
+                onclick="closeServiceDeleteModal()"
+            >
+                Cancel
+            </button>
+
+            <button 
+                type="button"
+                class="confirm-delete-button"
+                onclick="confirmServiceDelete()"
+            >
+                Delete Service Record
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openServiceDeleteModal() {
+        document.getElementById("delete-service-modal").classList.add("show");
+    }
+    function closeServiceDeleteModal() {
+        document.getElementById("delete-service-modal").classList.remove("show");
+    }
+
+    function confirmServiceDelete() {
+        document.getElementById("delete-service-form").submit();
+    }
+</script>
 {% endblock %}
