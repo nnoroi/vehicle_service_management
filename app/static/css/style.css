@@ -135,13 +135,15 @@ body {
 }
 
 .maintenance-due {
-    color: #b00020;
+    color: #ff8a8a;    
     font-weight: bold;
+    background-color: #3a2020;
 }
 
 .maintenance-ok {
-    color: #2e7d32;
+    color: #8fd19e;
     font-weight: bold;
+    background-color: #203a2a;
 }
 
 .vehicles-needing-service {
@@ -489,4 +491,271 @@ body {
 .information-item strong {
     color: #f1f3f5;
     font-size: 16px;
+}
+
+.maintenance-status {
+    margin-bottom: 30px;
+    padding: 24px;
+    background-color: #15181d;
+    border: 1px solid #2a2f36;
+    border-radius: 12px;
+}
+
+.maintenance-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.maintenance-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #8d96a3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.maintenance-header h2 {
+    margin: 0;
+    color: #f1f3f5;
+    font-size: 22px;
+}
+
+.maintenance-badge {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.maintenance-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background-color: #2a2f36;
+    border: 1px solid #2a2f36;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.maintenance-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 18px;
+    background-color: #111418;
+}
+
+.maintenance-item span {
+    color: #8d96a3;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.maintenance-item strong {
+    color: #f1f3f5;
+    font-size: 16px;
+}
+
+.service-history {
+    margin-bottom: 30px;
+}
+
+.service-history header {
+    display: flex;
+    align-items:  center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.service-history label {
+    display: block;
+    margin-bottom: 7px;
+    color: #8d96a3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.service-history header h2 {
+    margin: 0;
+    color: #f1f3f5;
+    font-size: 22px;
+}
+
+.add-service-button {
+    display: inline-block;
+    padding: 9px 16px;
+    background-color: #f1f3f5;
+    color: #0d0f12;
+    border-radius: 7px;
+    text-decoration:  none;
+    font-size: 14px;
+    font-weight: 600;
+    white-space:  nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.add-service-button {
+    background-color: #d9dde2;
+    transform: translateY(-1px);
+}
+
+.service-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.service-card {
+    padding: 22px;
+    background-color: #15181d;
+    border: 1px solid #2a2f36;
+    border-radius: 12px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    border-color: #555d68;
+    transform: translateY(-2px);
+}
+
+.service-card-header {
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 20px;
+margin-bottom: 20px;
+}
+
+.service-card-header h3 {
+margin: 0 0 6px 0;
+color: #f1f3f5;
+font-size: 18px;
+}
+
+.service-date {
+color: #8d96a3;
+font-size: 13px;
+}
+
+.service-status {
+padding: 6px 10px;
+background-color: #20242a;
+border: 1px solid #2f353d;
+border-radius: 6px;
+color: #a6adb7;
+font-size: 12px;
+font-weight: 700;
+white-space: nowrap;
+}
+
+.service-card-details {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 1px;
+margin-bottom: 16px;
+background-color: #2a2f36;
+border: 1px solid #2a2f36;
+border-radius: 8px;
+overflow: hidden;
+}
+
+.service-detail {
+display: flex;
+flex-direction: column;
+gap: 7px;
+padding: 16px;
+background-color: #111418;
+}
+
+.service-detail span {
+color: #8d96a3;
+font-size: 13px;
+font-weight: 600;
+}
+
+.service-detail strong {
+color: #f1f3f5;
+font-size: 15px;
+}
+
+.service-notes {
+margin-bottom: 18px;
+}
+
+.service-notes span {
+display: block;
+margin-bottom: 6px;
+color: #8d96a3;
+font-size: 13px;
+font-weight: 600;
+}
+
+.service-notes p {
+margin: 0;
+color: #a6adb7;
+font-size: 14px;
+line-height: 1.5;
+}
+
+.service-view-button {
+display: inline-block;
+color: #f1f3f5;
+font-size: 14px;
+font-weight: 600;
+text-decoration: none;
+}
+
+.service-view-button {
+text-decoration: underline;
+}
+
+.empty-service-history {
+padding: 30px;
+background-color: #15181d;
+border: 1px solid #2a2f36;
+border-radius: 12px;
+text-align: center;
+}
+
+.empty-service-history p {
+margin: 0 0 18px 0;
+color: #a6adb7;
+}
+
+.service-completed {
+    background-color: #203a2a;
+    border-color: #31583d;
+    color: #8fd19e;
+}
+
+.service-scheduled {
+    background-color: #202f3a;
+    border-color: #304b5c;
+    color: #8fc7e8;
+}
+
+.service-in-progress {
+    background-color: #3a3020;
+    border-color: #5a4a2d;
+    color: #e0b86a;
+}
+
+.service-cancelled {
+    background-color: #3a2020;
+    border-color: #5a3030;
+    color: #ff8a8a;
+}
+
+.service-history-actions {
+    margin-top: 16px;
+}
+
+.vehicle-information-actions {
+    margin-top: -18px;
+    margin-bottom: 30px;
 }

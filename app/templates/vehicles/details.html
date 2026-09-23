@@ -10,10 +10,6 @@
         <p class="vehicle-year">{{ vehicle.year }}</p>
     </div>
 
-    <a href="/vehicles/{{ vehicle.id }}/edit" class="edit-button">
-        Edit Vehicle
-    </a>
-
     <section class="vehicle-information">
 
         <div class="information-item">
@@ -38,103 +34,142 @@
 
     </section>
 
+    <div class="vehicle-information-actions">
+        <a href="/vehicles/{{ vehicle.id }}/edit" class="edit-button">
+            Edit Vehicle
+        </a>
+    </div>
+
     <section class="maintenance-status">
+    
+    <div class="maintenance-header">
+        <div>
+            <span class="maintenance-label">MAINTENANCE</span>
+            <h2>Maintenance Status</h2>
+        </div>
 
-        <h2>Maintenance Status</h2>
+        {% if maintenance_status.status == "Service Due" %}
+        <span class="maintenance-badge maintenance-due">
+            Service Due
+        </span>
+        {% else %}
+        <span class="maintenance-badge maintenance-ok">
+            Service Not Due
+        </span>
+        {% endif %}
+    </div>
 
-        <p>
-            <strong>Status:</strong>
-            {% if maintenance_status.status == "Service Due" %}
-            <span class="maintenance-due">
-                Service Due
-            </span>
+    <div class="maintenance-details">
+        <div class="maintenance-item">
+            <span>Next Service</span>
+
+            {% if maintenance_status.next_service_mileage %}
+                <strong>
+                    {{ maintenance_status.next_service_mileage }} miles
+                </strong>
             {% else %}
-            <span class="maintenance-ok">
-                Service Not Due
-            </span>
+                <strong>Service required</strong>
             {% endif %}
-        </p>
+        </div>
 
         {% if maintenance_status.next_service_mileage %}
-        <p>
-            <strong>Next Service:</strong>
-            {{ maintenance_status.next_service_mileage }} miles
-        </p>
-
-        <p>
-            <strong>Miles Remaining:</strong>
-            {{ maintenance_status.miles_remaining }} miles
-        </p>
-        {% else %}
-        <p>
-            <strong>Next Service:</strong>
-            Service required
-        </p>
+        <div class="maintenance-item">
+            <span>Miles Remaining</span>
+            <strong>
+                {{ maintenance_status.miles_remaining }} miles
+            </strong>
+        </div>
         {% endif %}
-
+    </div>
     </section>
 
     <section class="service-history">
+    
+    <div class="service-history-header">
+        <div>
+            <span class="service-history-label">HISTORY</span>
+            <h2>Service History</h2>
+        </div>
+    </div>
 
-        <h2>Service History</h2>
-        {% if service_records %}
+    {% if service_records %}
+
+    <div class="service-history-list">
+
         {% for record in service_records %}
 
         <article class="service-card">
-            <h3>{{ record.service_type }}</h3>
 
-            <p>
-                <strong>Date:</strong>
-                {{ record.service_date }}
-            </p>
+            <div class="service-card-header">
+                <div>
+                    <h3>{{ record.service_type }}</h3>
+                    <span class="service-date">{{ record.service_date }}</span>
+                </div>
+        
+               {% if record.status == "Completed" %}
+                    <span class="service-status service-completed">
+                        Completed
+                    </span>
 
-            <p>
-                <strong>Mileage:</strong>
-                {{ record.mileage }} miles
-            </p>
+                {% elif record.status == "Scheduled" %}
+                    <span class="service-status service-scheduled">
+                        Scheduled
+                    </span>
 
-            <p>
-                <strong>Cost:</strong>
-                £{{ record.cost }}
-            </p>
+                {% elif record.status == "In Progress" %}
+                    <span class="service-status service-in-progress">
+                        In Progress
+                    </span>
 
-            <p>
-                <strong>Status:</strong>
-                {{ record.status }}
-            </p>
+                {% elif record.status == "Cancelled" %}
+                    <span class="service-status service-cancelled">
+                        Cancelled
+                    </span>
+                
+                {% endif %}
+            </div>
+            
+            <div class="service-card-details">
+
+                <div class="service-detail">
+                    <span>Mileage</span>
+                    <strong>{{ record.mileage }} miles</strong>
+                </div>
+
+                <div class="service-detail">
+                    <span>Cost</span>
+                    <strong>£{{ record.cost }}</strong>
+                </div>
+
+            </div>
 
             {% if record.notes %}
-            <p>
-                <strong>Notes:</strong>
-                {{ record.notes }}
-            </p>
+            <div class="service-notes">
+                <span>Notes</span>
+                <p>{{ record.notes }}</p>
+            </div>
             {% endif %}
-
-            <a href="/services/{{ record.id }}/details">
-                View Service Record
+            <a href="/services/{{ record.id }}/details" class="service-view-button"> 
+                View Service Record 
             </a>
-
         </article>
 
         {% endfor %}
+    </div>
+    <div class="service-history-actions">
+        <a href="/vehicles/{{ vehicle.id }}/services/new" class="add-service-button">
+        + Add Service
+        </a>
+    </div>
 
-        {% else %}
-
-        <p> No service records found for this vehicle</p>
-
-        {% endif %}
+    {% else %}
+    <div class="empty-service-history"> 
+        <p>No service records found for this vehicle.</p>
+    </div> 
+    {% endif %}
     </section>
 
     <div class="vehicle-actions">
-
-        <a href="/vehicles/{{ vehicle.id }}/services/new">
-            Add Service Record
-        </a>
-
-        <a href="/vehicles/{{ vehicle.id }}/edit">
-            Edit Vehicle
-        </a>
-
         <a href="/vehicles">
             Back to Vehicles
         </a>
@@ -145,4 +180,5 @@
             </button>
         </form>
     </div>
-    {% endblock %}
+</section>
+{% endblock %}
