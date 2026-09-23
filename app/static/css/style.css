@@ -439,6 +439,16 @@ body {
     letter-spacing: 1.5px;
 }
 
+.vehicle-label {
+    margin: 0 0 8px 0;
+    color: #8d96a3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+
+
 .vehicle-details-header h1 {
     margin: 0;
     font-size: 36px;
@@ -899,4 +909,145 @@ color: #a6adb7;
 
 .maintenance-item-full {
     grid-column: 1 / -1;
+}
+
+.service-details {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.service-details-header {
+    margin-bottom: 30px;
+}
+
+.service-details-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #8d96a3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+
+.service-details-header h1 {
+    margin: 0 0 8px 0; 
+    color: #f1f3f5;
+    font-size: 32px;
+}
+
+.service-vehicle {
+    margin: 0;
+    color: #a6adb7;
+    font-size: 15px;
+}
+
+.service-vehicle span {
+    margin-left: 8px;
+    color: #8d96a3;
+}
+
+.service-information {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin-bottom: 30px;
+    background-color: #2a2f36;
+    border: 1px solid #2a2f36;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.service-information-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 20px;
+    background-color: #15181d;
+}
+
+.service-information-item span {
+    color: #8d96a3;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.service-information-item strong {
+    color: #f1f3f5;
+    font-size: 16px;
+}
+
+.service-notes-item {
+    grid-column: 1 / -1;
+}
+
+.service-notes-item strong {
+    color: #a6adb7;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.service-detail-status {
+    display: inline-block;
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+.service-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid #2a2f36;
+}
+
+.service-actions a,
+.service-actions button {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.edit-service-button {
+    background-color: #f1f3f5;
+    color: #0d0f12;
+    border: 1px solid #f1f3f5;
+}
+
+.edit-service-button:hover {
+    background-color: #d9dde2;
+}
+
+.back-services-button {
+    background-color: transparent;
+    color: #f1f3f5;
+    border: 1px solid #3a414a;
+}
+
+.back-services-button:hover {
+    background-color: #20242a;
+}
+
+.service-actions form {
+    margin-left: auto;
+}
+
+.delete-service-button {
+    background-color: transparent;
+    color: #ff8a8a;
+    border: 1px solid #5a3030;
+}
+
+.delete-service-button:hover {
+    background-color: #3a2020;
 }
