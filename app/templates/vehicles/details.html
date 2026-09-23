@@ -7,7 +7,7 @@
     <div>
         <p class="vehicle-label">VEHICLE</p>
         <h1>{{ vehicle.make }} {{ vehicle.model }}</h1>
-        <p class="vehicle-year">{{ vehicle.year }}</p>
+        <p class="vehicle-year">Year: {{ vehicle.year }}</p>
     </div>
 
     <section class="vehicle-information">
@@ -60,7 +60,7 @@
     </div>
 
     <div class="maintenance-details">
-        <div class="maintenance-item">
+        <div class="maintenance-item {% if not maintenance_status.next_service_mileage %}maintenance-item-full{% endif %}">
             <span>Next Service</span>
 
             {% if maintenance_status.next_service_mileage %}
@@ -155,30 +155,75 @@
         </article>
 
         {% endfor %}
+
     </div>
+
+    {% else %}
+
+    <div class="empty-service-history"> 
+        <p>No service records found for this vehicle.</p>
+    </div> 
+
+    {% endif %}
+
     <div class="service-history-actions">
         <a href="/vehicles/{{ vehicle.id }}/services/new" class="add-service-button">
         + Add Service
         </a>
     </div>
-
-    {% else %}
-    <div class="empty-service-history"> 
-        <p>No service records found for this vehicle.</p>
-    </div> 
-    {% endif %}
     </section>
 
     <div class="vehicle-actions">
+
         <a href="/vehicles">
             Back to Vehicles
         </a>
 
-        <form method="POST" action="/vehicles/{{ vehicle.id }}/delete">
-            <button type="submit">
+        <form method="POST" action="/vehicles/{{ vehicle.id }}/delete" id="delete-vehicle-form">
+            <button type="button" class="delete-vehicle-button" onclick="openDeleteModal()">
                 Delete Vehicle
             </button>
         </form>
     </div>
 </section>
+
+<div id="delete-modal" class="delete-modal">
+
+    <div class="delete-modal-content">
+
+        <span class="delete-modal-label">DELETE VEHICLE</span>
+
+        <h2>Delete {{ vehicle.make }} {{ vehicle.model }}</h2>
+
+        <p>
+            This will permanently delete this vehicle and its service history.
+            This action cannot be undone.
+        </p>
+
+        <div class="delete-modal-actions">
+
+            <button type="button" class="cancel-delete-button" onclick="closeDeleteModal()">
+                Cancel
+            </button>
+
+            <button type="button" class="confirm-delete-button" onclick="confirmDelete()">
+                Delete Vehicle
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal() {
+        document.getElementById("delete-modal").classList.add("show");
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("delete-modal").classList.remove("show");
+    }
+
+    function confirmDelete () {
+        document.getElementById("delete-vehicle-form").submit();
+    }
+</script>
 {% endblock %}
