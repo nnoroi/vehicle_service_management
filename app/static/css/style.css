@@ -1051,3 +1051,135 @@ color: #a6adb7;
 .delete-service-button:hover {
     background-color: #3a2020;
 }
+
+
+.service-edit {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto; 
+}
+
+
+.service-edit-header {
+    margin-bottom: 30px;
+}
+
+.service-edit-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #8a96a3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.service-edit-header h1 {
+    margin: 0 0 8px 0;
+    color: #f1f3f5;
+    font-size: 32px;
+}
+
+.service-edit-vehicle {
+    margin: 0;
+    color: #a6adb7;
+    font-size: 15px;
+}
+
+.service-edit-vehicle span {
+    margin-left: 8px;
+    color: #8d96a3;
+}
+
+.service-edit form {
+    width: 100%;
+}
+
+.service-edit-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 24px;
+    background-color: #15181d;
+    border: 1px solid #2a2f36;
+    border-radius: 12px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-field-full {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    color: #a6adb7;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    background-color: #0d0f12;
+    color: #f1f3f5;
+    border: 1px solid #3a414a;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    outline: none;
+    border-color: #6b737e;
+}
+
+.form-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.service-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.save-service-button,
+.cancel-service-button {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.save-service-button {
+    background-color: #f1f3f5;
+    color: #0d0f12;
+    border: 1px solid #f1f3f5;
+}
+
+.save-service-button:hover {
+    background-color: #d9dde2;
+}
+
+.cancel-service-button {
+    background-color: transparent;
+    color: #f1f3f5;
+    border: 1px solid #3a414a;
+}
+
+.cancel-service-button:hover {
+    background-color: #20242a;
+}

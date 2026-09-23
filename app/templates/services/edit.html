@@ -1,112 +1,162 @@
+```html
 {% extends "base.html" %}
+
 {% block content %}
 
 <section class="service-edit">
 
-    <header class="page-header">
-        <h1>Edit Service Record</h1>
-        <p>
-            <strong>Make:</strong>{{ vehicle.make }}<br>
-            <strong>Model:</strong>{{ vehicle.model }}<br>
-            <strong>Year:</strong> {{ vehicle.year }}</p>
+    <header class="service-edit-header">
+
+        <span class="service-edit-label">EDIT SERVICE RECORD</span>
+
+        <h1>Edit {{ record.service_type }}</h1>
+
+        <p class="service-edit-vehicle">
+            {{ vehicle.make }} {{ vehicle.model }}
+            <span>{{ vehicle.year }}</span>
         </p>
+
     </header>
 
     <form method="POST">
+
         {% if error %}
             <p class="form-error">
                 {{ error }}
             </p>
         {% endif %}
 
-        <div>
-            <label for="service_type">Service Type</label>
-            <input 
-                type="text"
-                id="service_type"
-                name="service_type"
-                value="{{ record.service_type }}"
-                required>
+        <div class="service-edit-form">
+
+            <div class="form-field">
+
+                <label for="service_type">Service Type</label>
+
+                <input
+                    type="text"
+                    id="service_type"
+                    name="service_type"
+                    value="{{ record.service_type }}"
+                    required
+                >
+
+            </div>
+
+            <div class="form-field">
+
+                <label for="service_date">Service Date</label>
+
+                <input
+                    type="date"
+                    id="service_date"
+                    name="service_date"
+                    value="{{ record.service_date }}"
+                    required
+                >
+
+            </div>
+
+            <div class="form-field">
+
+                <label for="mileage">Mileage</label>
+
+                <input
+                    type="number"
+                    id="mileage"
+                    name="mileage"
+                    value="{{ record.mileage }}"
+                    required
+                >
+
+            </div>
+
+            <div class="form-field">
+
+                <label for="cost">Cost (£)</label>
+
+                <input
+                    type="number"
+                    id="cost"
+                    name="cost"
+                    step="0.01"
+                    value="{{ record.cost }}"
+                    required
+                >
+
+            </div>
+
+            <div class="form-field">
+
+                <label for="status">Status</label>
+
+                <select id="status" name="status" required>
+
+                    <option
+                        value="Scheduled"
+                        {% if record.status == "Scheduled" %}selected{% endif %}
+                    >
+                        Scheduled
+                    </option>
+
+                    <option
+                        value="In Progress"
+                        {% if record.status == "In Progress" %}selected{% endif %}
+                    >
+                        In Progress
+                    </option>
+
+                    <option
+                        value="Completed"
+                        {% if record.status == "Completed" %}selected{% endif %}
+                    >
+                        Completed
+                    </option>
+
+                    <option
+                        value="Cancelled"
+                        {% if record.status == "Cancelled" %}selected{% endif %}
+                    >
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-field form-field-full">
+
+                <label for="notes">Notes</label>
+
+                <textarea
+                    id="notes"
+                    name="notes"
+                >{{ record.notes or "" }}</textarea>
+
+            </div>
+
         </div>
 
-        <div>
-            <label for="service_date">Service Date</label>
-            <input 
-                type="date"
-                id="service_date"
-                name="service_date"
-                value="{{ record.service_date }}"
-                required>
-        </div>
+        <div class="service-edit-actions">
 
-        <div>
-            <label for="mileage">Mileage</label>
-            <input 
-                type="number"
-                id="mileage"
-                name="mileage"
-                value="{{ record.mileage }}"
-                required>
-        </div>
-
-        <div>
-            <label for="cost">Cost (£)</label>
-            <input 
-                type="number"
-                id="cost"
-                name="cost"
-                step="0.01"
-                value="{{ record.cost }}"
-                required>
-        </div>
-
-        <div>
-            <label for="status">Status</label>
-            <select id="status" name="status" required>
-
-                <option value="Scheduled"
-                    {% if record.status == "Scheduled" %}selected{% endif %}>
-                    Scheduled
-                </option>
-
-                <option value="In Progress"
-                    {% if record.status == "In Progress" %}selected{% endif %}>
-                    In Progress
-                </option>
-
-                <option value="Completed"
-                    {% if record.status == "Completed" %}selected{% endif %}>
-                    Completed
-                </option>
-
-                <option value="Cancelled"
-                    {% if record.status == "Cancelled" %}selected{% endif %}>
-                    Cancelled
-                </option>
-            </select>
-        </div>
-
-        <div>
-            <label for="notes">Notes</label>
-            <textarea
-                id="notes"
-                name="notes">
-                {{ record.notes or "" }}
-            </textarea>
-        </div>
-
-        <div class="service-actions">
-
-            <button type="submit">
+            <button
+                type="submit"
+                class="save-service-button"
+            >
                 Save Changes
             </button>
 
-            <a href="/services/{{ record.id }}/details">
+            <a
+                href="/services/{{ record.id }}/details"
+                class="cancel-service-button"
+            >
                 Cancel
             </a>
 
         </div>
+
     </form>
+
 </section>
 
 {% endblock %}
+```
