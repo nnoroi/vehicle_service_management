@@ -2,66 +2,145 @@
 
 {% block content %}
 
-
 <section class="service-page">
-    <header class="page-header">
-        <h1>Service Records</h1>
-        <p>Manage service records for your Mercedes vehicles</p>
+
+    <header class="service-list-header">
+
+        <div>
+            <span class="service-list-label">SERVICE HISTORY</span>
+
+            <h1>Service Records</h1>
+
+            <p>Manage service records for your Mercedes vehicles</p>
+        </div>
+
+        <span class="service-count">
+            {{ records|length }}
+            service record{% if records|length != 1 %}s{% endif %}
+        </span>
+
     </header>
 
     <section class="service-list">
 
         {% if records %}
+
             {% for record in records %}
 
             <article class="service-card">
 
                 <div class="service-card-header">
-                    <h2>{{ record.service_type }}</h2>
-                    <span>{{ record.status }}</span>
+
+                    <div>
+                        <span class="service-card-label">SERVICE</span>
+
+                        <h2>{{ record.service_type }}</h2>
+                    </div>
+
+                    {% if record.status == "Completed" %}
+
+                        <span class="service-status service-completed">
+                            Completed
+                        </span>
+
+                    {% elif record.status == "Scheduled" %}
+
+                        <span class="service-status service-scheduled">
+                            Scheduled
+                        </span>
+
+                    {% elif record.status == "In Progress" %}
+
+                        <span class="service-status service-in-progress">
+                            In Progress
+                        </span>
+
+                    {% elif record.status == "Cancelled" %}
+
+                        <span class="service-status service-cancelled">
+                            Cancelled
+                        </span>
+
+                    {% endif %}
+
                 </div>
 
-                <div class="service-card-details">
-                    <p>
-                        <strong>Vehicle:</strong>
+                <div class="service-card-vehicle">
+
+                    <span>VEHICLE</span>
+
+                    <strong>
                         {{ vehicles[record.vehicle_id].make }}
                         {{ vehicles[record.vehicle_id].model }}
-                        — {{ vehicles[record.vehicle_id].year }}
-                    </p>
+                    </strong>
 
                     <p>
-                        <strong>Service Date:</strong>
-                        {{ record.service_date }}
+                        {{ vehicles[record.vehicle_id].year }}
                     </p>
 
-                    <p>
-                        <strong>Mileage</strong>
-                        {{ record.mileage }} miles
-                    </p>
-
-                    <p>
-                        <strong>Cost:</strong>
-                        £{{ record.cost }}
-                    </p>
-
-                    {% if record.notes %}
-                        <p>
-                            <strong>Notes:</strong>
-                            {{ record.notes }}
-                        </p>
-                    {% endif %}
                 </div>
 
-                <a href="/services/{{ record.id }}/details">
-                    View Service Record
-                </a>
+                <div class="service-list-details">
+
+                    <div class="service-detail-item">
+                        <span>Service Date</span>
+                        <strong>{{ record.service_date }}</strong>
+                    </div>
+
+                    <div class="service-detail-item">
+                        <span>Mileage</span>
+                        <strong>{{ record.mileage }} miles</strong>
+                    </div>
+
+                    <div class="service-detail-item">
+                        <span>Cost</span>
+                        <strong>£{{ record.cost }}</strong>
+                    </div>
+
+                    {% if record.notes %}
+
+                    <div class="service-detail-item service-notes">
+                        <span>Notes</span>
+                        <strong>{{ record.notes }}</strong>
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="service-card-actions">
+                    <a
+                        href="/services/{{ record.id }}/details"
+                        class="view-service-button">
+                        View Service Record
+                    </a>
+
+                </div>
+
             </article>
+
             {% endfor %}
+
         {% else %}
 
-            <p>No service records found</p>
+            <div class="service-empty">
+
+                <span class="service-empty-label">NO RECORDS</span>
+
+                <h2>No service records found</h2>
+
+                <p>
+                    Service records for your Mercedes vehicles
+                    will appear here.
+                </p>
+
+            </div>
 
         {% endif %}
+
     </section>
+
 </section>
+
 {% endblock %}
+```
