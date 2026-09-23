@@ -2,11 +2,16 @@
 
 {% block content %}
 
-<section class="vehicle-form">
+<section class="vehicle-create">
     
-    <header class="page-header">
-        <h1>Add vehicle</h1>
-        <p>Add a Mercedes vehicle to your service managament system</p>
+    <header class="vehicle-create-header">
+
+        <span class="vehicle-create-label">NEW VEHICLE</span>
+        <h1>Add Vehicle</h1>
+        <p>
+            Add a Mercedes vehicle to your service management system
+        </p>
+
     </header>
 
     <form method="POST">
@@ -15,108 +20,106 @@
                 {{ error }}
             </div>
         {% endif %}
+        <div class="vehicle-create-form">
+            <div class="form-field">
+                <label for="make">Make</label>
+                <input
+                    type="text"
+                    id="make"
+                    name ="make"
+                    value="{{ vehicle.make if vehicle else 'Mercedes-Benz' }}"
+                    required>
+            </div>
+
+            <div class="form-field">
+                <label for="model">Model</label>
+                <input
+                    type="text"
+                    id="model"
+                    name="model"
+                    value="{{ vehicle.model if vehicle else '' }}"
+                    required>
+            </div>
+
+            <div class="form-field">
+                <label for="year">Year</label>
+                <input
+                    type="number"
+                    id="year"
+                    name ="year"
+                    value="{{ vehicle.year if vehicle else '' }}"
+                    required>
+            </div>
+
+
+            <div class="form-field">
+                    <label for="registration">Registration</label>
+                    <input
+                    type="text"
+                    id="registration"
+                    name ="registration"
+                    value="{{ vehicle.registration if vehicle else '' }}"
+                    required>
+            </div>
+
+            <div class="form-field">
+                <label for="vin">VIN</label>
+                <input
+                    type="text"
+                    id="vin"
+                    name="vin"
+                    value="{{ vehicle.vin if vehicle else '' }}"
+                    required>
+            </div>
+
+            <div class="form-field">
+                <label for="mileage">Mileage</label>
+                <input
+                    type="number"
+                    id="mileage"
+                    name="mileage"
+                    min="0"
+                    value="{{ vehicle.mileage if vehicle else 0 }}"
+                    required>
+            </div>
+
+            <div class="form-field">
+                <label for="fuel_type">Fuel Type</label>
         
-        <div class="form-group">
-            <label for="make">Make</label>
-            <input
-            type="text"
-            id="make"
-            name ="make"
-            value="Mercedes-Benz"
-            value="{{ vehicle.make if vehicle else 'Mercedes-Benz' }}"
-            required>
-        </div>
-
-        <div class="form-group">
-            <label for="model">Model</label>
-            <input
-            type="text"
-            id="model"
-            name="model"
-            value="{{ vehicle.model if vehicle else '' }}"
-            required>
-        </div>
-
-        <div class="form-group">
-            <label for="year">Year</label>
-            <input
-            type="number"
-            id="year"
-            name ="year"
-            value="{{ vehicle.year if vehicle else '' }}"
-            required>
-        </div>
-
-
-        <div class="form-group">
-            <label for="registration">Registration</label>
-            <input
-            type="text"
-            id="registration"
-            name ="registration"
-            value="{{ vehicle.registration if vehicle else '' }}"
-            required>
-        </div>
-
-        <div class="form-group">
-            <label for="vin">VIN</label>
-            <input
-                type="text"
-                id="vin"
-                name="vin"
-                value="{{ vehicle.vin if vehicle else '' }}"
-                required>
-        </div>
-
-        <div class="form-group">
-            <label for="mileage">Mileage</label>
-            <input
-                type="number"
-                id="mileage"
-                name="mileage"
-                min="0"
-                value="0"
-                value="{{ vehicle.mileage if vehicle else 0 }}"
-                required>
-        </div>
-
-        <div class="form-group">
-            <label for="fuel_type">Fuel Type</label>
-        
-        <select id="fuel_type" name="fuel_type" required>
-            <option value="">Select fuel type</option>
+            <select id="fuel_type" name="fuel_type" required>
+                <option value="">Select fuel type</option>
             
-            <option value="Petrol"
-                {% if vehicle and vehicle.fuel_type == "Petrol" %}selected{% endif %}>
-                Petrol
-            </option>
+                <option value="Petrol"
+                    {% if vehicle and vehicle.fuel_type == "Petrol" %}selected{% endif %}>
+                    Petrol
+                </option>
 
-            <option value="Diesel"
-                {% if vehicle and vehicle.fuel_type == "Diesel" %}selected{% endif %}>
-                Diesel
-            </option>
+                <option value="Diesel"
+                    {% if vehicle and vehicle.fuel_type == "Diesel" %}selected{% endif %}>
+                    Diesel
+                </option>
 
-            <option value="Hybrid"
-                {% if vehicle and vehicle.fuel_type == "Hybrid" %}selected{% endif %}>
-                Hybrid
-            </option>
+                <option value="Hybrid"
+                    {% if vehicle and vehicle.fuel_type == "Hybrid" %}selected{% endif %}>
+                    Hybrid
+                </option>
 
-            <option value="Electric"
-                {% if vehicle and vehicle.fuel_type == "Electric" %}selected{% endif %}>
-                Electric
-            </option>
-        </select>
+                <option value="Electric"
+                    {% if vehicle and vehicle.fuel_type == "Electric" %}selected{% endif %}>
+                    Electric
+                </option>
+            </select>
         </div>
+        </div>
+        <div class="vehicle-create-actions">
+            <button type="submit" class="create-vehicle-button">
+                Add Vehicle
+            </button>
 
-         <button type="submit">
-            Add Vehicle
-        </button>
-
+            <a href="/vehicles" class="cancel-vehicle-button">
+                Back to Vehicles
+            </a>
+        </div>
     </form>
-
-    <a href="/vehicles">
-        Back to Vehicles
-    </a>
-
 </section>
 {% endblock %}

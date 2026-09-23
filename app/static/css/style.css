@@ -1472,3 +1472,82 @@ color: #a6adb7;
 .create-service-button:hover {
     background-color: #d9dde2;
 }
+
+.vehicle-create {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.vehicle-create-header {
+    margin-bottom: 30px;
+}
+
+.vehicle-create-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #8d96a3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.vehicle-create-header h1 {
+    margin: 0 0 8px 0;
+    color: #f1f3f5;
+    font-size: 32px;
+}
+
+.vehicle-create form {
+    width: 100%;
+}
+
+.vehicle-create-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 24px;
+    background-color: #15181d;
+    border: 1px solid #2a2f36;
+    border-radius: 12px;
+}
+
+.vehicle-create-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.create-vehicle-button,
+.cancel-vehicle-button {
+    width: 150px;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+.create-vehicle-button {
+    background-color: #f1f3f5;
+    color: #0d0f12;
+    border: 1px solid #f1f3f5;
+}
+
+.create-vehicle-button:hover {
+    background-color: #d9dde2;
+}
+
+.cancel-vehicle-button {
+    background-color: transparent;
+    color: #f1f3f5;
+    border: 1px solid #3a414a;
+}
+
+.cancel-vehicle-button:hover {
+    background-color: #20242a;
+}
