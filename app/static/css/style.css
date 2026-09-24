@@ -58,6 +58,12 @@ body {
     color: #f1f3f5;
 }
 
+.nav-links a.active {
+    /* background-color: #20242a; */
+    color: #f1f3f5;
+    box-shadow: inset 0 -2px 0 #f1f3f5;
+}
+
 .main-container {
     max-width: 1200px;
     margin: 0 auto;
