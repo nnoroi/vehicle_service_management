@@ -41,136 +41,189 @@
     </div>
 
     <section class="maintenance-status">
-    
-    <div class="maintenance-header">
-        <div>
-            <span class="maintenance-label">MAINTENANCE</span>
-            <h2>Maintenance Status</h2>
-        </div>
 
-        {% if maintenance_status.status == "Service Due" %}
-        <span class="maintenance-badge maintenance-due">
-            Service Due
-        </span>
-        {% else %}
-        <span class="maintenance-badge maintenance-ok">
-            Service Not Due
-        </span>
-        {% endif %}
-    </div>
+        <div class="maintenance-header">
+            <div>
+                <span class="maintenance-label">MAINTENANCE</span>
+                <h2>Maintenance Status</h2>
+            </div>
 
-    <div class="maintenance-details">
-        <div class="maintenance-item {% if not maintenance_status.next_service_mileage %}maintenance-item-full{% endif %}">
-            <span>Next Service</span>
-
-            {% if maintenance_status.next_service_mileage %}
-                <strong>
-                    {{ maintenance_status.next_service_mileage }} miles
-                </strong>
+            {% if maintenance_status.status == "Service Due" %}
+            <span class="maintenance-badge maintenance-due">
+                Service Due
+            </span>
             {% else %}
-                <strong>Service required</strong>
+            <span class="maintenance-badge maintenance-ok">
+                Service Not Due
+            </span>
             {% endif %}
         </div>
 
-        {% if maintenance_status.next_service_mileage %}
-        <div class="maintenance-item">
-            <span>Miles Remaining</span>
-            <strong>
-                {{ maintenance_status.miles_remaining }} miles
-            </strong>
+        <div class="maintenance-details">
+            <div
+                class="maintenance-item {% if not maintenance_status.next_service_mileage %}maintenance-item-full{% endif %}">
+                <span>Next Service</span>
+
+                {% if maintenance_status.next_service_mileage %}
+                <strong>
+                    {{ maintenance_status.next_service_mileage }} miles
+                </strong>
+                {% else %}
+                <strong>Service required</strong>
+                {% endif %}
+            </div>
+
+            {% if maintenance_status.next_service_mileage %}
+            <div class="maintenance-item">
+                <span>Miles Remaining</span>
+                <strong>
+                    {{ maintenance_status.miles_remaining }} miles
+                </strong>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
+    </section>
+
+    <section class="service-summary">
+
+        <div class="service_summary_header">
+            <div>
+                <span class="service-summary-label">OVERVIEW</span>
+                <h2>Service Summary</h2>
+            </div>
+        </div>
+
+        <div class="service-summary-details">
+
+            <div class="service-summary-item">
+                <span>Total Services</span>
+                <strong>
+                    {{ service_history_summary["total_services"] }}
+                </strong>
+            </div>
+
+            <div class="service-summary-item">
+                <span>Last Service</span>
+
+                <strong>
+                    {% if service_history_summary["last_service_date"] %}
+                    {{ service_history_summary["last_service_date"] }}
+                    {% else %}
+                    No service recorded
+                    {% endif %}
+                </strong>
+            </div>
+
+            <div class="service-summary-item">
+                <span>Last Service Mileage</span>
+
+                <strong>
+                    {% if service_history_summary["last_service_mileage"] is not none %}
+                    {{ service_history_summary["last_service_mileage"] }} miles
+                    {% else %}
+                    No service recorded
+                    {% endif %}
+                </strong>
+            </div>
+
+            <div class="service-summary-item">
+                <span>Total Spent</span>
+
+                <strong>
+                    £{{ "%.2f"|format(service_history_summary["total_cost"]) }}
+                </strong>
+            </div>
+        </div>
     </section>
 
     <section class="service-history">
-    
-    <div class="service-history-header">
-        <div>
-            <span class="service-history-label">HISTORY</span>
-            <h2>Service History</h2>
+
+        <div class="service-history-header">
+            <div>
+                <span class="service-history-label">HISTORY</span>
+                <h2>Service History</h2>
+            </div>
         </div>
-    </div>
 
-    {% if service_records %}
+        {% if service_records %}
 
-    <div class="service-history-list">
+        <div class="service-history-list">
 
-        {% for record in service_records %}
+            {% for record in service_records %}
 
-        <article class="service-card">
+            <article class="service-card">
 
-            <div class="service-card-header">
-                <div>
-                    <h3>{{ record.service_type }}</h3>
-                    <span class="service-date">{{ record.service_date }}</span>
-                </div>
-        
-               {% if record.status == "Completed" %}
+                <div class="service-card-header">
+                    <div>
+                        <h3>{{ record.service_type }}</h3>
+                        <span class="service-date">{{ record.service_date }}</span>
+                    </div>
+
+                    {% if record.status == "Completed" %}
                     <span class="service-status service-completed">
                         Completed
                     </span>
 
-                {% elif record.status == "Scheduled" %}
+                    {% elif record.status == "Scheduled" %}
                     <span class="service-status service-scheduled">
                         Scheduled
                     </span>
 
-                {% elif record.status == "In Progress" %}
+                    {% elif record.status == "In Progress" %}
                     <span class="service-status service-in-progress">
                         In Progress
                     </span>
 
-                {% elif record.status == "Cancelled" %}
+                    {% elif record.status == "Cancelled" %}
                     <span class="service-status service-cancelled">
                         Cancelled
                     </span>
-                
+
+                    {% endif %}
+                </div>
+
+                <div class="service-card-details">
+
+                    <div class="service-detail">
+                        <span>Mileage</span>
+                        <strong>{{ record.mileage }} miles</strong>
+                    </div>
+
+                    <div class="service-detail">
+                        <span>Cost</span>
+                        <strong>£{{ record.cost }}</strong>
+                    </div>
+
+                </div>
+
+                {% if record.notes %}
+                <div class="service-notes">
+                    <span>Notes</span>
+                    <p>{{ record.notes }}</p>
+                </div>
                 {% endif %}
-            </div>
-            
-            <div class="service-card-details">
+                <a href="/services/{{ record.id }}/details" class="service-view-button">
+                    View Service Record
+                </a>
+            </article>
 
-                <div class="service-detail">
-                    <span>Mileage</span>
-                    <strong>{{ record.mileage }} miles</strong>
-                </div>
+            {% endfor %}
 
-                <div class="service-detail">
-                    <span>Cost</span>
-                    <strong>£{{ record.cost }}</strong>
-                </div>
+        </div>
 
-            </div>
+        {% else %}
 
-            {% if record.notes %}
-            <div class="service-notes">
-                <span>Notes</span>
-                <p>{{ record.notes }}</p>
-            </div>
-            {% endif %}
-            <a href="/services/{{ record.id }}/details" class="service-view-button"> 
-                View Service Record 
+        <div class="empty-service-history">
+            <p>No service records found for this vehicle.</p>
+        </div>
+
+        {% endif %}
+
+        <div class="service-history-actions">
+            <a href="/vehicles/{{ vehicle.id }}/services/new" class="add-service-button">
+                + Add Service
             </a>
-        </article>
-
-        {% endfor %}
-
-    </div>
-
-    {% else %}
-
-    <div class="empty-service-history"> 
-        <p>No service records found for this vehicle.</p>
-    </div> 
-
-    {% endif %}
-
-    <div class="service-history-actions">
-        <a href="/vehicles/{{ vehicle.id }}/services/new" class="add-service-button">
-        + Add Service
-        </a>
-    </div>
+        </div>
     </section>
 
     <div class="vehicle-actions">
@@ -222,7 +275,7 @@
         document.getElementById("delete-modal").classList.remove("show");
     }
 
-    function confirmDelete () {
+    function confirmDelete() {
         document.getElementById("delete-vehicle-form").submit();
     }
 </script>

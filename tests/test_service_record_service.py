@@ -758,3 +758,52 @@ def test_get_service_history_summary_uses_latest_service_mileage(
 
     assert summary["last_service_date"] == "2026-09-15"
     assert summary["last_service_mileage"] == 25000
+
+
+def test_get_service_history_summary_empty(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "S-Class",
+            2024,
+            "MS24 ABC",
+            "W1K98765432101234",
+            10000,
+            "Petrol"
+        )
+    )
+
+    vehicle_id = connection.execute(
+        "SELECT id FROM vehicles WHERE registration = ?",
+        ("MS24 ABC",)
+    ).fetchone()["id"]
+
+    connection.commit()
+
+    from app.services.service_record_service import get_service_history_summary
+
+    summary = get_service_history_summary(vehicle_id)
+
+    assert summary["total_services"] == 0
+    assert summary["last_service_date"] is None
+    assert summary["last_service_mileage"] is None
+    assert summary["total_cost"] == 0

@@ -1,7 +1,10 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
 from app.models.vehicle import Vehicle
 from app.services.maintenance_service import get_maintenance_status
-from app.services.service_record_service import get_records_by_vehicle_id
+from app.services.service_record_service import (
+    get_records_by_vehicle_id,
+    get_service_history_summary
+)
 from app.services.vehicle_service import (
     get_all_vehicles,
     get_vehicle_by_id,
@@ -17,8 +20,9 @@ def get_vehicles():
     vehicles_list = get_all_vehicles()
     return render_template(
         "vehicles/list.html",
-        vehicles = vehicles_list
+        vehicles=vehicles_list
     )
+
 
 @vehicle_bp.route("/vehicles/add", methods=["GET", "POST"])
 def add_vehicle():
@@ -38,8 +42,8 @@ def add_vehicle():
         except ValueError as error:
             return render_template(
                 "vehicles/add.html",
-                error = str(error),
-                vehicle = vehicle
+                error=str(error),
+                vehicle=vehicle
             ), 400
 
         return redirect(f"/vehicles/{vehicle.id}")
@@ -49,11 +53,12 @@ def add_vehicle():
 @vehicle_bp.route("/vehicles/<int:vehicle_id>")
 def get_vehicle(vehicle_id):
     vehicle = get_vehicle_by_id(vehicle_id)
-    
+
     if not vehicle:
         return "Vehicle not found", 404
 
     service_records = get_records_by_vehicle_id(vehicle_id)
+    service_history_summary = get_service_history_summary(vehicle_id)
 
     maintenance_status = get_maintenance_status(
         vehicle_id,
@@ -62,9 +67,10 @@ def get_vehicle(vehicle_id):
 
     return render_template(
         "vehicles/details.html",
-        vehicle = vehicle,
-        service_records = service_records,
-        maintenance_status = maintenance_status
+        vehicle=vehicle,
+        service_records=service_records,
+        service_history_summary=service_history_summary,
+        maintenance_status=maintenance_status
     )
 
 
@@ -169,9 +175,9 @@ def edit_vehicle(vehicle_id):
         vehicle.make = request.form["make"]
         vehicle.model = request.form["model"]
         vehicle.year = int(request.form["year"])
-        vehicle.registration  = request.form["registration"]
-        vehicle.vin  = request.form["vin"]
-        vehicle.mileage  = int(request.form["mileage"])
+        vehicle.registration = request.form["registration"]
+        vehicle.vin = request.form["vin"]
+        vehicle.mileage = int(request.form["mileage"])
         vehicle.fuel_type = request.form["fuel_type"]
 
         try:
@@ -179,16 +185,17 @@ def edit_vehicle(vehicle_id):
         except ValueError as error:
             return render_template(
                 "vehicles/edit.html",
-                vehicle = vehicle,
-                error = str(error)
+                vehicle=vehicle,
+                error=str(error)
             ), 400
 
         return redirect(f"/vehicles/{vehicle_id}")
 
     return render_template(
         "vehicles/edit.html",
-        vehicle = vehicle
+        vehicle=vehicle
     )
+
 
 @vehicle_bp.route("/vehicles/<int:vehicle_id>/delete", methods=["POST"])
 def delete_vehicle_page(vehicle_id):
@@ -200,6 +207,7 @@ def delete_vehicle_page(vehicle_id):
     delete_vehicle(vehicle_id)
 
     return redirect("/vehicles")
+
 
 @vehicle_bp.route("/vehicles/<int:vehicle_id>", methods=["DELETE"])
 def delete_vehicle_route(vehicle_id):
@@ -215,7 +223,6 @@ def delete_vehicle_route(vehicle_id):
     }), 200
 
 
-
 @vehicle_bp.route("/vehicles/<int:vehicle_id>/maintenance")
 def get_vehicle_maintenance(vehicle_id):
     vehicle = get_vehicle_by_id(vehicle_id)
@@ -227,5 +234,3 @@ def get_vehicle_maintenance(vehicle_id):
 
     maintenance_status = get_maintenance_status(vehicle_id, vehicle.mileage)
     return jsonify(maintenance_status), 200
-
-
