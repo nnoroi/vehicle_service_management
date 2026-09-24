@@ -2,6 +2,10 @@ from app.database.connection import get_connection
 from app.models.service_record import ServiceRecord
 from app.validators.service_record_validator import validate_service_record
 from app.services.vehicle_service import get_vehicle_by_id
+from app.services.maintenance_service import (
+    get_last_service_for_vehicle,
+    get_previous_service_for_vehicle
+)
 
 
 def create_service_record(record):
@@ -16,6 +20,14 @@ def create_service_record(record):
     if vehicle is None:
         raise ValueError(
             f"Vehicle with ID {record.vehicle_id} does not exist."
+        )
+
+    last_service = get_last_service_for_vehicle(record.vehicle_id)
+
+    if last_service and record.mileage < last_service.mileage:
+        raise ValueError(
+            f"Service mileage cannot be lower than the previous "
+            f"service mileage of {last_service.mileage} miles."
         )
 
     connection = get_connection()
@@ -140,6 +152,30 @@ def update_service_record(record):
     if errors:
         raise ValueError("\n".join(errors))
 
+    connection = get_connection()
+    existing_record = connection.execute(
+        """
+        SELECT id
+        FROM service_records
+        WHERE id = ?
+        """,
+        (record.id,)
+    ).fetchone()
+
+    if existing_record is None:
+        connection.close()
+        return False
+
+    connection.close()
+
+    previous_service = get_previous_service_for_vehicle(
+        record.vehicle_id, record.id)
+
+    if previous_service and record.mileage < previous_service.mileage:
+        raise ValueError(
+            f"Service mileage cannot be lower than the previous "
+            f"service mileage of {previous_service.mileage} miles."
+        )
     connection = get_connection()
     cursor = connection.execute(
         """

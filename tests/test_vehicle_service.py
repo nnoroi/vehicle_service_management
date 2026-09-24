@@ -160,6 +160,10 @@ def test_delete_vehicle_cascades_service_records(test_database, monkeypatch):
         test_database
     )
 
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
     vehicle = Vehicle(
         vehicle_id=None,
         make="Mercedes-Benz",

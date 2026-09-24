@@ -491,6 +491,11 @@ def test_update_service(monkeypatch, test_database):
         test_database
     )
 
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
     app = create_app()
 
     with app.test_client() as client:

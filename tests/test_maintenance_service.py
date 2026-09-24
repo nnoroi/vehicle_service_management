@@ -379,3 +379,100 @@ def test_get_maintenance_status_service_due(monkeypatch, test_database):
     assert status["status"] == "Service Due"
     assert status["next_service_mileage"] == 60000
     assert status["miles_remaining"] == 0
+
+
+def test_get_next_service_mileage_uses_latest_service_by_date(
+    test_database,
+    monkeypatch
+):
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 ECL",
+            "W1K12345678901234",
+            40000,
+            "Diesel"
+        )
+    )
+
+    vehicle_id = connection.execute(
+        "SELECT id FROM vehicles WHERE registration = ?",
+        ("MB25 ECL",)
+    ).fetchone()["id"]
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Full Service",
+            "2026-06-15",
+            35000,
+            500.00,
+            "Completed",
+            "Full service"
+        )
+    )
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Brake Service",
+            "2026-09-15",
+            25000,
+            300.00,
+            "Completed",
+            "Brake inspection"
+        )
+    )
+
+    connection.commit()
+
+    from app.services.maintenance_service import get_next_service_mileage
+
+    next_service_mileage = get_next_service_mileage(vehicle_id)
+
+    assert next_service_mileage == 35000

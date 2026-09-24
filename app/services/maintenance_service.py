@@ -31,24 +31,45 @@ def get_last_service_for_vehicle(vehicle_id):
     )
 
 
-def get_next_service_mileage(vehicle_id):
+def get_previous_service_for_vehicle(vehicle_id, record_id):
     connection = get_connection()
+
     row = connection.execute(
         """
-        SELECT mileage
+        SELECT *
         FROM service_records
         WHERE vehicle_id = ?
-        ORDER BY mileage DESC
+          AND id != ?
+        ORDER BY service_date DESC, id DESC
         LIMIT 1
         """,
-        (vehicle_id,)
+        (vehicle_id, record_id)
     ).fetchone()
 
     connection.close()
 
     if not row:
         return None
-    return row["mileage"] + 10000
+
+    return ServiceRecord(
+        vehicle_id=row["vehicle_id"],
+        service_type=row["service_type"],
+        service_date=row["service_date"],
+        mileage=row["mileage"],
+        cost=row["cost"],
+        status=row["status"],
+        notes=row["notes"],
+        record_id=row["id"]
+    )
+
+
+def get_next_service_mileage(vehicle_id):
+    last_service = get_last_service_for_vehicle(vehicle_id)
+
+    if last_service is None:
+        return None
+
+    return last_service.mileage + 10000
 
 
 def is_service_due(vehicle_id, current_mileage):
