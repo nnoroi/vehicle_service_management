@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} Mercedes Vehicle Service Management {% endblock %}</title>
+    <title>{% block title %}Mercedes Vehicle Service Management{% endblock %}</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-    <nav class="navbar-container">
-        <div class="navbar-container">
+    <nav class="navbar">
+        <div class="navbar-inner">
 
             <a class="brand" href="{{ url_for('dashboard.dashboard') }}">
                 Mercedes Vehicle Service Management
