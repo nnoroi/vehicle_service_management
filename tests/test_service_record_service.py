@@ -563,3 +563,198 @@ def test_get_service_record_by_id_not_found(test_database, monkeypatch):
 
     result = get_service_record_by_id(9999)
     assert result is None
+
+
+def test_get_service_history_summary(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "C 300",
+            2022,
+            "MJ22 XTR",
+            "W1K2060421F123456",
+            40000,
+            "Petrol"
+        )
+    )
+
+    vehicle_id = connection.execute(
+        "SELECT id FROM vehicles WHERE registration = ?",
+        ("MJ22 XTR",)
+    ).fetchone()["id"]
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Oil Change",
+            "2026-03-10",
+            30000,
+            120.00,
+            "Completed",
+            "Oil and filter replaced"
+        )
+    )
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Full Service",
+            "2026-09-15",
+            40000,
+            600.00,
+            "Completed",
+            "Full Mercedes service completed"
+        )
+    )
+
+    connection.commit()
+
+    from app.services.service_record_service import get_service_history_summary
+
+    summary = get_service_history_summary(vehicle_id)
+
+    assert summary["total_services"] == 2
+    assert summary["last_service_date"] == "2026-09-15"
+    assert summary["last_service_mileage"] == 40000
+    assert summary["total_cost"] == 720.00
+
+
+def test_get_service_history_summary_uses_latest_service_mileage(
+    test_database,
+    monkeypatch
+):
+
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 ECL",
+            "W1K12345678901234",
+            40000,
+            "Diesel"
+        )
+    )
+
+    vehicle_id = connection.execute(
+        "SELECT id FROM vehicles WHERE registration = ?",
+        ("MB25 ECL",)
+    ).fetchone()["id"]
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Full Service",
+            "2026-06-15",
+            35000,
+            500.00,
+            "Completed",
+            "Full service"
+        )
+    )
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Brake Service",
+            "2026-09-15",
+            25000,
+            300.00,
+            "Completed",
+            "Brake inspection"
+        )
+    )
+
+    connection.commit()
+
+    from app.services.service_record_service import get_service_history_summary
+
+    summary = get_service_history_summary(vehicle_id)
+
+    assert summary["last_service_date"] == "2026-09-15"
+    assert summary["last_service_mileage"] == 25000

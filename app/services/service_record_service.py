@@ -74,6 +74,40 @@ def get_records_by_vehicle_id(vehicle_id):
     return records
 
 
+def get_service_history_summary(vehicle_id):
+    """Get summary information about a vehicle's service history"""
+
+    connection = get_connection()
+    cursor = connection.execute(
+        """
+        SELECT 
+            COUNT(*) AS total_services,
+            MAX(service_date) AS last_service_date,
+            (
+                SELECT mileage 
+                FROM service_records 
+                WHERE vehicle_id =? 
+                ORDER BY service_date DESC, id DESC
+                LIMIT 1
+            ) AS last_service_mileage,
+            COALESCE(SUM(cost), 0) AS total_cost
+        FROM service_records
+        WHERE vehicle_id = ?
+        """,
+        (vehicle_id, vehicle_id)
+    )
+
+    row = cursor.fetchone()
+    connection.close()
+
+    return {
+        "total_services": row["total_services"],
+        "last_service_date": row["last_service_date"],
+        "last_service_mileage": row["last_service_mileage"],
+        "total_cost": row["total_cost"]
+    }
+
+
 def get_service_record_by_id(record_id):
     """Get a specific service record from the database"""
 
