@@ -2,15 +2,17 @@
 
 A web-based vehicle service management system developed as a portfolio project using Python, Flask and SQLite.
 
-The system is a vehicle service management application focused on managing Mercedes-Benz vehicles and their service history. It provides vehicle management, service record management, maintenance tracking and a dashboard for monitoring service activity.
+The application is focused on managing Mercedes-Benz vehicles, their service records and maintenance information. It provides vehicle management, service record management, maintenance tracking, dashboard monitoring and a REST API.
 
 > This is an independent portfolio project and is not an official Mercedes-Benz application.
+
+**GitHub:** https://github.com/nnoroi/vehicle_service_management
 
 ## Features
 
 ### Vehicle Management
 
-* Add new vehicles
+* Add new Mercedes-Benz vehicles
 * View vehicle details
 * Edit vehicle information
 * Delete vehicles
@@ -32,6 +34,7 @@ The system is a vehicle service management application focused on managing Merce
 * Determine whether a vehicle is due for service
 * Display miles remaining until the next service
 * Identify vehicles requiring maintenance
+* Prevent service mileage from moving backwards
 
 ### Dashboard
 
@@ -47,8 +50,11 @@ The system is a vehicle service management application focused on managing Merce
 * Validate vehicle and service record input
 * Prevent invalid mileage and cost values
 * Validate service record status
+* Validate service mileage chronology
 * Handle missing vehicles and service records
-* Return appropriate HTTP error responses for invalid API requests
+* Handle missing and malformed JSON requests
+* Return appropriate HTTP error responses
+* Use a global Flask error handler for `ValueError` exceptions
 
 ## Technologies
 
@@ -74,6 +80,7 @@ vehicle_service_management/
 │   ├── validators/
 │   ├── static/
 │   ├── templates/
+│   ├── errors.py
 │   └── __init__.py
 │
 ├── tests/
@@ -85,6 +92,79 @@ vehicle_service_management/
 ├── README.md
 └── requirements.txt
 ```
+
+The local SQLite database is stored in `instance/` and is excluded from version control.
+
+## Architecture
+
+The application separates responsibilities into different layers:
+
+```text
+Routes
+  ↓
+Services
+  ↓
+Validators
+  ↓
+Database
+```
+
+Models represent the application's data structures and are used throughout the application layers.
+
+* **Routes** handle HTTP requests and responses.
+* **Services** contain application and business logic.
+* **Models** represent application data.
+* **Validators** handle input validation.
+* **Database** contains SQLite connection and database initialisation logic.
+* **Templates** provide the web interface.
+* **Tests** verify application behaviour.
+* **Error handling** provides consistent API responses for application errors.
+
+This separation keeps the application modular, easier to test and easier to maintain.
+
+## REST API
+
+The application provides REST API endpoints for vehicle and service record management.
+
+### Vehicles
+
+| Method | Endpoint                             | Description                         |
+| ------ | ------------------------------------ | ----------------------------------- |
+| GET    | `/vehicles`                          | Display the vehicle management page |
+| POST   | `/vehicles`                          | Create a vehicle through the API    |
+| GET    | `/vehicles/<vehicle_id>`             | View vehicle details                |
+| PUT    | `/vehicles/<vehicle_id>`             | Update a vehicle                    |
+| DELETE | `/vehicles/<vehicle_id>`             | Delete a vehicle                    |
+| GET    | `/vehicles/<vehicle_id>/maintenance` | Get maintenance information         |
+
+### Service Records
+
+| Method | Endpoint                          | Description                       |
+| ------ | --------------------------------- | --------------------------------- |
+| GET    | `/services`                       | Display service records           |
+| GET    | `/vehicles/<vehicle_id>/services` | Get service records for a vehicle |
+| POST   | `/vehicles/<vehicle_id>/services` | Create a service record           |
+| GET    | `/services/<service_id>`          | Get a service record              |
+| PUT    | `/services/<service_id>`          | Update a service record           |
+| DELETE | `/services/<service_id>`          | Delete a service record           |
+
+API requests use JSON where applicable.
+
+Example vehicle creation request:
+
+```json
+{
+    "make": "Mercedes-Benz",
+    "model": "C-Class",
+    "year": 2022,
+    "registration": "MJ22 XTR",
+    "vin": "W1K2060421F123456",
+    "mileage": 38450,
+    "fuel_type": "Petrol"
+}
+```
+
+Successful API requests return JSON responses, while invalid requests return appropriate HTTP status codes and JSON error messages.
 
 ## How to Run
 
@@ -127,11 +207,11 @@ python -m app.database.init_db
 flask --app app run
 ```
 
-The application will then be available locally through the Flask development server.
+The application will then be available through the Flask development server.
 
 ## Running Tests
 
-The project uses pytest for automated testing.
+The project uses **pytest** for automated testing.
 
 Run the complete test suite with:
 
@@ -139,38 +219,35 @@ Run the complete test suite with:
 python -m pytest
 ```
 
-The tests cover areas including:
+The test suite covers areas including:
 
 * Database functionality
 * Vehicle management
 * Service record management
-* Validation
+* Input validation
 * Maintenance calculations
+* Service history
 * Dashboard functionality
 * API routes
 * Error handling
+* Invalid and missing API input
+* Service mileage integrity
 
-## Architecture
+Tests use isolated database connections and mocking where required to avoid modifying the application's local database.
 
-The application separates responsibilities into different layers:
+## Development Approach
 
-```text
-Routes
-  ↓
-Services
-  ↓
-Database
-```
+The project was developed incrementally using Git and feature branches.
 
-* **Routes** handle HTTP requests and responses.
-* **Services** contain application and business logic.
-* **Models** represent application data.
-* **Validators** handle input validation.
-* **Database** contains SQLite connection and database initialisation logic.
-* **Templates** provide the web interface.
-* **Tests** verify application behaviour.
+Development focused on:
 
-This structure helps keep the application modular and easier to maintain.
+* Separating business logic from routes
+* Reusable validation
+* Automated testing
+* Small, logically complete Git commits
+* API error handling
+* Maintaining data integrity
+* Building a clear and maintainable application structure
 
 ## Future Improvements
 
@@ -182,4 +259,5 @@ Possible future extensions include:
 * Customer management
 * Appointment scheduling
 * Deployment to a production environment
-* Additional automated and integration tests
+* Additional integration tests
+* API documentation using OpenAPI/Swagger
