@@ -557,6 +557,23 @@ def test_update_service_missing_json():
     assert data["error"] == "Request body must contain JSON data"
 
 
+def test_create_vehicle_service_invalid_json():
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post(
+            "/vehicles/9999/services",
+            data='{"service_type": "Oil Change',
+            content_type="application/json"
+        )
+
+    assert response.status_code == 400
+
+    data = response.get_json()
+
+    assert data["error"] == "Request body must contain JSON data"
+
+
 def test_delete_service(monkeypatch, test_database):
     test_connection = test_database()
 
