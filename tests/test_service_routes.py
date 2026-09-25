@@ -557,6 +557,72 @@ def test_update_service_missing_json():
     assert data["error"] == "Request body must contain JSON data"
 
 
+def test_update_service_invalid_mileage(monkeypatch, test_database):
+    test_connection = test_database()
+
+    cursor = test_connection.execute(
+        """
+        INSERT INTO vehicles
+        (make, model, year, registration, vin, mileage, fuel_type)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "C-Class",
+            2022,
+            "MJ22 XTR",
+            "W1K2060421F123456",
+            30000,
+            "Petrol"
+        )
+    )
+
+    vehicle_id = cursor.lastrowid
+    cursor = test_connection.execute(
+        """
+        INSERT INTO service_records
+        (vehicle_id, service_type, service_date, mileage, cost, status, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Oil Change",
+            "2026-09-10",
+            30000,
+            85,
+            "Completed",
+            "Oil and filter replaced"
+        )
+    )
+
+    service_id = cursor.lastrowid
+    test_connection.commit()
+
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.put(f"/services/{service_id}",
+                              json={
+                                  "mileage": -500
+        }
+        )
+
+    assert response.status_code == 400
+
+    data = response.get_json()
+    assert "Mileage cannot be negative" in data["error"]
+
+
 def test_create_vehicle_service_invalid_json():
     app = create_app()
 
