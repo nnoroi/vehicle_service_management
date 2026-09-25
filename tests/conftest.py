@@ -5,7 +5,7 @@ from pathlib import Path
 
 @pytest.fixture
 def test_database(tmp_path):
-    # creates temporart database file in the tmp_path directory
+    # creates temporary database file in the tmp_path directory
     database_path = tmp_path / "test_database.db"
 
     connection = sqlite3.connect(database_path)
@@ -26,10 +26,15 @@ def test_database(tmp_path):
     connection.commit()
     connection.close()
 
+    connections = []
+
     def get_test_connection():
         connection = sqlite3.connect(database_path)
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA foreign_keys = ON")
+        connections.append(connection)
         return connection
+    yield get_test_connection
 
-    return get_test_connection
+    for connection in connections:
+        connection.close()
