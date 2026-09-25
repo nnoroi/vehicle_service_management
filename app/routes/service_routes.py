@@ -15,6 +15,19 @@ from app.services.vehicle_service import get_vehicle_by_id
 service_bp = Blueprint("services", __name__)
 
 
+def service_record_to_dict(record):
+    return {
+        "id": record.id,
+        "vehicle_id": record.vehicle_id,
+        "service_type": record.service_type,
+        "service_date": record.service_date,
+        "mileage": record.mileage,
+        "cost": record.cost,
+        "status": record.status,
+        "notes": record.notes
+    }
+
+
 @service_bp.route("/services")
 def get_services():
     records = get_all_records()
@@ -42,16 +55,7 @@ def get_vehicle_services(vehicle_id):
     records = get_records_by_vehicle_id(vehicle_id)
 
     return jsonify([
-        {
-            "id": record.id,
-            "vehicle_id": record.vehicle_id,
-            "service_type": record.service_type,
-            "service_date": record.service_date,
-            "mileage": record.mileage,
-            "cost": record.cost,
-            "status": record.status,
-            "notes": record.notes
-        }
+        service_record_to_dict(record)
         for record in records
     ])
 
@@ -104,16 +108,7 @@ def create_vehicle_service(vehicle_id):
 
     service_record = create_service_record(service_record)
 
-    return jsonify({
-        "id": service_record.id,
-        "vehicle_id": service_record.vehicle_id,
-        "service_type": service_record.service_type,
-        "service_date": service_record.service_date,
-        "mileage": service_record.mileage,
-        "cost": service_record.cost,
-        "status": service_record.status,
-        "notes": service_record.notes
-    }), 201
+    return jsonify(service_record_to_dict(service_record)), 201
 
 
 @service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["GET"])
@@ -168,16 +163,7 @@ def get_service(service_id):
             "error": "Service record not found."
         }), 404
 
-    return jsonify({
-        "id": record.id,
-        "vehicle_id": record.vehicle_id,
-        "service_type": record.service_type,
-        "service_date": record.service_date,
-        "mileage": record.mileage,
-        "cost": record.cost,
-        "status": record.status,
-        "notes": record.notes
-    }), 200
+    return jsonify(service_record_to_dict(record)), 200
 
 
 @service_bp.route("/services/<int:service_id>/details")
@@ -298,16 +284,7 @@ def update_service(service_id):
 
     update_service_record(service_record)
 
-    return jsonify({
-        "id": service_record.id,
-        "vehicle_id": service_record.vehicle_id,
-        "service_type": service_record.service_type,
-        "service_date": service_record.service_date,
-        "mileage": service_record.mileage,
-        "cost": service_record.cost,
-        "status": service_record.status,
-        "notes": service_record.notes
-    }), 200
+    return jsonify(service_record_to_dict(service_record)), 200
 
 
 @service_bp.route("/services/<int:service_id>", methods=["DELETE"])
