@@ -106,10 +106,8 @@ def create_vehicle_route():
         mileage=data["mileage"],
         fuel_type=data["fuel_type"]
     )
-    try:
-        vehicle = create_vehicle(vehicle)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+
+    vehicle = create_vehicle(vehicle)
 
     return jsonify({
         "id": vehicle.id,
@@ -147,10 +145,7 @@ def update_vehicle_route(vehicle_id):
     vehicle.mileage = data.get("mileage", vehicle.mileage)
     vehicle.fuel_type = data.get("fuel_type", vehicle.fuel_type)
 
-    try:
-        update_vehicle(vehicle)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+    update_vehicle(vehicle)
 
     return jsonify({
         "id": vehicle.id,
