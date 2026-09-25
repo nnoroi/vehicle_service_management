@@ -742,3 +742,20 @@ def test_create_vehicle_service_missing_fields(test_database, monkeypatch):
         "cost",
         "status"
     ]
+
+
+def test_create_vehicle_service_empty_json():
+
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.post(
+            f"/vehicles/9999/services",
+            json={}
+        )
+
+    assert response.status_code == 400
+
+    data = response.get_json()
+
+    assert data["error"] == "Request body must contain JSON data"
