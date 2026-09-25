@@ -544,6 +544,19 @@ def test_update_service_not_found(monkeypatch, test_database):
     assert data["error"] == "Service record not found."
 
 
+def test_update_service_missing_json():
+    app = create_app()
+
+    with app.test_client() as client:
+        response = client.put("services/9999")
+
+    assert response.status_code == 400
+
+    data = response.get_json()
+
+    assert data["error"] == "Request body must contain JSON data"
+
+
 def test_delete_service(monkeypatch, test_database):
     test_connection = test_database()
 
