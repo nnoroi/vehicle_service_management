@@ -11,6 +11,7 @@ from app.services.service_record_service import (
 )
 from app.services.vehicle_service import get_vehicle_by_id
 
+
 service_bp = Blueprint("services", __name__)
 
 
@@ -101,12 +102,7 @@ def create_vehicle_service(vehicle_id):
         notes=data.get("notes")
     )
 
-    try:
-        service_record = create_service_record(service_record)
-    except ValueError as e:
-        return jsonify({
-            "error": str(e)
-        }), 400
+    service_record = create_service_record(service_record)
 
     return jsonify({
         "id": service_record.id,
@@ -300,12 +296,7 @@ def update_service(service_id):
         service_record.notes
     )
 
-    try:
-        update_service_record(service_record)
-    except ValueError as e:
-        return jsonify({
-            "error": str(e)
-        }), 400
+    update_service_record(service_record)
 
     return jsonify({
         "id": service_record.id,
