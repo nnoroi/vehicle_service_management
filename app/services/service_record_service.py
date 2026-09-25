@@ -4,7 +4,8 @@ from app.validators.service_record_validator import validate_service_record
 from app.services.vehicle_service import get_vehicle_by_id
 from app.services.maintenance_service import (
     get_last_service_for_vehicle,
-    get_previous_service_for_vehicle
+    get_previous_service_for_vehicle,
+    get_next_service_for_vehicle
 )
 
 
@@ -169,12 +170,26 @@ def update_service_record(record):
     connection.close()
 
     previous_service = get_previous_service_for_vehicle(
-        record.vehicle_id, record.id)
+        record.vehicle_id,
+        record.id,
+        record.service_date)
 
     if previous_service and record.mileage < previous_service.mileage:
         raise ValueError(
             f"Service mileage cannot be lower than the previous "
             f"service mileage of {previous_service.mileage} miles."
+        )
+
+    next_service = get_next_service_for_vehicle(
+        record.vehicle_id,
+        record.id,
+        record.service_date
+    )
+
+    if next_service and record.mileage > next_service.mileage:
+        raise ValueError(
+            f"Service mileage cannot be higher than the next "
+            f"service mileage of {next_service.mileage} miles."
         )
     connection = get_connection()
     cursor = connection.execute(

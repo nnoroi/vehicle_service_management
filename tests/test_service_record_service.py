@@ -1091,3 +1091,137 @@ def test_update_service_record_rejects_lower_mileage(
 
     with pytest.raises(ValueError, match="previous service mileage"):
         update_service_record(record)
+
+
+def test_update_service_record_rejects_higher_than_next_mileage(
+    test_database,
+    monkeypatch
+):
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    cursor = connection.execute(
+        """
+        INSERT INTO vehicles (
+            make,
+            model,
+            year,
+            registration,
+            vin,
+            mileage,
+            fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 ECL",
+            "W1K12345678901234",
+            45000,
+            "Diesel"
+        )
+    )
+
+    vehicle_id = cursor.lastrowid
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Full Service",
+            "2026-06-15",
+            35000,
+            500.00,
+            "Completed",
+            "Full service"
+        )
+    )
+
+    cursor = connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Oil Change",
+            "2026-09-15",
+            40000,
+            200.00,
+            "Completed",
+            "Oil change"
+        )
+    )
+
+    service_id = cursor.lastrowid
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id,
+            service_type,
+            service_date,
+            mileage,
+            cost,
+            status,
+            notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Brake Service",
+            "2026-12-15",
+            45000,
+            300.00,
+            "Completed",
+            "Brake inspection"
+        )
+    )
+
+    connection.commit()
+    connection.close()
+
+    record = ServiceRecord(
+        vehicle_id=vehicle_id,
+        service_type="Oil Change",
+        service_date="2026-09-15",
+        mileage=50000,
+        cost=200.00,
+        status="Completed",
+        notes="Updated oil change",
+        record_id=service_id
+    )
+
+    with pytest.raises(ValueError, match="next service mileage"):
+        update_service_record(record)

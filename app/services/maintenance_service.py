@@ -31,7 +31,7 @@ def get_last_service_for_vehicle(vehicle_id):
     )
 
 
-def get_previous_service_for_vehicle(vehicle_id, record_id):
+def get_previous_service_for_vehicle(vehicle_id, record_id, service_date):
     connection = get_connection()
 
     row = connection.execute(
@@ -40,10 +40,44 @@ def get_previous_service_for_vehicle(vehicle_id, record_id):
         FROM service_records
         WHERE vehicle_id = ?
           AND id != ?
+          AND service_date <= ?
         ORDER BY service_date DESC, id DESC
         LIMIT 1
         """,
-        (vehicle_id, record_id)
+        (vehicle_id, record_id, service_date)
+    ).fetchone()
+
+    connection.close()
+
+    if not row:
+        return None
+
+    return ServiceRecord(
+        vehicle_id=row["vehicle_id"],
+        service_type=row["service_type"],
+        service_date=row["service_date"],
+        mileage=row["mileage"],
+        cost=row["cost"],
+        status=row["status"],
+        notes=row["notes"],
+        record_id=row["id"]
+    )
+
+
+def get_next_service_for_vehicle(vehicle_id, record_id, service_date):
+    connection = get_connection()
+
+    row = connection.execute(
+        """
+        SELECT *
+        FROM service_records
+        WHERE vehicle_id = ?
+            AND id != ?
+            AND service_date >= ?
+        ORDER BY service_date ASC, id ASC
+        LIMIT 1
+        """,
+        (vehicle_id, record_id, service_date)
     ).fetchone()
 
     connection.close()
