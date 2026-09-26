@@ -1,5 +1,6 @@
 from app.database.connection import get_connection
 from app.models.service_record import ServiceRecord
+from app.services.service_record_mapper import row_to_service_record
 
 
 def get_last_service_for_vehicle(vehicle_id):
@@ -10,7 +11,7 @@ def get_last_service_for_vehicle(vehicle_id):
         SELECT *
         FROM service_records
         WHERE vehicle_id = ?
-        ORDER BY service_date DESC
+        ORDER BY service_date DESC, id DESC
         LIMIT 1
         """,
         (vehicle_id,)
@@ -19,16 +20,7 @@ def get_last_service_for_vehicle(vehicle_id):
     connection.close()
     if not row:
         return None
-    return ServiceRecord(
-        vehicle_id=row["vehicle_id"],
-        service_type=row["service_type"],
-        service_date=row["service_date"],
-        mileage=row["mileage"],
-        cost=row["cost"],
-        status=row["status"],
-        notes=row["notes"],
-        record_id=row["id"]
-    )
+    return row_to_service_record(row)
 
 
 def get_previous_service_for_vehicle(vehicle_id, record_id, service_date):
@@ -52,16 +44,7 @@ def get_previous_service_for_vehicle(vehicle_id, record_id, service_date):
     if not row:
         return None
 
-    return ServiceRecord(
-        vehicle_id=row["vehicle_id"],
-        service_type=row["service_type"],
-        service_date=row["service_date"],
-        mileage=row["mileage"],
-        cost=row["cost"],
-        status=row["status"],
-        notes=row["notes"],
-        record_id=row["id"]
-    )
+    return row_to_service_record(row)
 
 
 def get_next_service_for_vehicle(vehicle_id, record_id, service_date):
@@ -85,16 +68,7 @@ def get_next_service_for_vehicle(vehicle_id, record_id, service_date):
     if not row:
         return None
 
-    return ServiceRecord(
-        vehicle_id=row["vehicle_id"],
-        service_type=row["service_type"],
-        service_date=row["service_date"],
-        mileage=row["mileage"],
-        cost=row["cost"],
-        status=row["status"],
-        notes=row["notes"],
-        record_id=row["id"]
-    )
+    return row_to_service_record(row)
 
 
 def get_next_service_mileage(vehicle_id):
