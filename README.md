@@ -249,6 +249,30 @@ The test suite covers areas including:
 
 Tests use isolated database connections and mocking where required to avoid modifying the application's local database.
 
+## Screenshots
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### Vehicle Management
+
+![Vehicles](screenshots/vehicles.png)
+
+![Vehicle Details](screenshots/vehicle-details.png)
+
+### Service Management
+
+![Service History](screenshots/service-history.png)
+
+![Add Service](screenshots/add-service.png)
+
+![Service Details](screenshots/service-details.png)
+
+### Testing
+
+![Tests](screenshots/tests.png)
+
 ## Development Approach
 
 The project was developed incrementally using Git and feature branches.
