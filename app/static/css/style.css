@@ -1719,3 +1719,9 @@ body {
     color: #f1f3f5;
     font-size: 16px;
 }
+
+
+.form-field textarea {
+    padding: 10px 12px !important;
+    text-indent: 0 !important;
+}

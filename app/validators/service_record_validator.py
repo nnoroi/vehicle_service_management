@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 VALID_STATUSES = {
     "Scheduled",
     "In Progress",
@@ -19,6 +22,12 @@ def validate_service_record(record):
 
     if not record.service_date:
         errors.append("Service date is required.")
+
+    else:
+        try:
+            datetime.strptime(record.service_date, "%Y-%m-%d")
+        except ValueError:
+            errors.append("Service date must be a valid date.")
 
     if not isinstance(record.mileage, (int, float)):
         errors.append("Mileage must be a number.")

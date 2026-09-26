@@ -181,7 +181,7 @@ def test_delete_vehicle_cascades_service_records(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Completed",

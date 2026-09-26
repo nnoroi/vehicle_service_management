@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request, render_template, redirect
+
+from app.utils.date_utils import parse_uk_date
 from app.models.service_record import ServiceRecord
 from app.services.service_record_mapper import service_record_to_dict
 from app.services.service_record_service import (
@@ -20,6 +22,7 @@ def get_services():
     records = get_all_records()
 
     vehicles = {}
+
     for record in records:
         vehicles[record.vehicle_id] = get_vehicle_by_id(record.vehicle_id)
 
@@ -98,7 +101,10 @@ def create_vehicle_service(vehicle_id):
     return jsonify(service_record_to_dict(service_record)), 201
 
 
-@service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["GET"])
+@service_bp.route(
+    "/vehicles/<int:vehicle_id>/services/new",
+    methods=["GET"]
+)
 def new_service(vehicle_id):
     vehicle = get_vehicle_by_id(vehicle_id)
 
@@ -111,17 +117,34 @@ def new_service(vehicle_id):
     )
 
 
-@service_bp.route("/vehicles/<int:vehicle_id>/services/new", methods=["POST"])
+@service_bp.route(
+    "/vehicles/<int:vehicle_id>/services/new",
+    methods=["POST"]
+)
 def submit_new_service(vehicle_id):
     vehicle = get_vehicle_by_id(vehicle_id)
 
     if not vehicle:
         return "Vehicle not found", 404
 
+    try:
+        service_date = parse_uk_date(
+            request.form["service_date"]
+        )
+    except ValueError:
+        return render_template(
+            "services/create.html",
+            vehicle=vehicle,
+            error=(
+                "Service date must be a valid date "
+                "in DD/MM/YYYY format."
+            )
+        ), 400
+
     record = ServiceRecord(
         vehicle_id=vehicle_id,
         service_type=request.form["service_type"],
-        service_date=request.form["service_date"],
+        service_date=service_date,
         mileage=int(request.form["mileage"]),
         cost=float(request.form["cost"]),
         status=request.form["status"],
@@ -150,7 +173,9 @@ def get_service(service_id):
             "error": "Service record not found."
         }), 404
 
-    return jsonify(service_record_to_dict(record)), 200
+    return jsonify(
+        service_record_to_dict(record)
+    ), 200
 
 
 @service_bp.route("/services/<int:service_id>/details")
@@ -169,7 +194,10 @@ def service_details(service_id):
     )
 
 
-@service_bp.route("/services/<int:service_id>/edit", methods=["GET"])
+@service_bp.route(
+    "/services/<int:service_id>/edit",
+    methods=["GET"]
+)
 def edit_service(service_id):
     record = get_service_record_by_id(service_id)
 
@@ -185,15 +213,36 @@ def edit_service(service_id):
     )
 
 
-@service_bp.route("/services/<int:service_id>/edit", methods=["POST"])
+@service_bp.route(
+    "/services/<int:service_id>/edit",
+    methods=["POST"]
+)
 def submit_edit_service(service_id):
     record = get_service_record_by_id(service_id)
 
     if not record:
         return "Service record not found", 404
 
+    service_date_input = request.form["service_date"]
+
+    try:
+        service_date = parse_uk_date(service_date_input)
+    except ValueError:
+        vehicle = get_vehicle_by_id(record.vehicle_id)
+
+        return render_template(
+            "services/edit.html",
+            record=record,
+            vehicle=vehicle,
+            service_date=service_date_input,
+            error=(
+                "Service date must be a valid date "
+                "in DD/MM/YYYY format."
+            )
+        ), 400
+
     record.service_type = request.form["service_type"]
-    record.service_date = request.form["service_date"]
+    record.service_date = service_date
     record.mileage = int(request.form["mileage"])
     record.cost = float(request.form["cost"])
     record.status = request.form["status"]
@@ -203,17 +252,22 @@ def submit_edit_service(service_id):
         update_service_record(record)
     except ValueError as error:
         vehicle = get_vehicle_by_id(record.vehicle_id)
+
         return render_template(
             "services/edit.html",
             record=record,
             vehicle=vehicle,
+            service_date=service_date_input,
             error=str(error)
         )
 
     return redirect(f"/services/{service_id}/details")
 
 
-@service_bp.route("/services/<int:service_id>/delete", methods=["POST"])
+@service_bp.route(
+    "/services/<int:service_id>/delete",
+    methods=["POST"]
+)
 def submit_delete_service(service_id):
     deleted = delete_service_record(service_id)
 
@@ -223,7 +277,10 @@ def submit_delete_service(service_id):
     return redirect("/services")
 
 
-@service_bp.route("/services/<int:service_id>", methods=["PUT"])
+@service_bp.route(
+    "/services/<int:service_id>",
+    methods=["PUT"]
+)
 def update_service(service_id):
     data = request.get_json(silent=True)
 
@@ -271,10 +328,15 @@ def update_service(service_id):
 
     update_service_record(service_record)
 
-    return jsonify(service_record_to_dict(service_record)), 200
+    return jsonify(
+        service_record_to_dict(service_record)
+    ), 200
 
 
-@service_bp.route("/services/<int:service_id>", methods=["DELETE"])
+@service_bp.route(
+    "/services/<int:service_id>",
+    methods=["DELETE"]
+)
 def delete_service(service_id):
     deleted = delete_service_record(service_id)
 

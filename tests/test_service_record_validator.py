@@ -1,4 +1,5 @@
 import pytest
+
 from app.models.service_record import ServiceRecord
 from app.validators.service_record_validator import validate_service_record
 
@@ -8,7 +9,7 @@ def test_valid_service_record():
         record_id=None,
         vehicle_id=2,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Completed",
@@ -47,7 +48,7 @@ def test_valid_service_record_with_zero_cost():
         record_id=None,
         vehicle_id=1,
         service_type="Warranty Check",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=10000,
         cost=0,
         status="Completed",
@@ -68,7 +69,7 @@ def test_valid_service_record_status(status):
         record_id=None,
         vehicle_id=1,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status=status,
@@ -85,7 +86,7 @@ def test_invalid_service_record_string_types():
         record_id=None,
         vehicle_id=1,
         service_type=None,
-        service_date="26/09/2026",
+        service_date="2026-09-26",
         mileage=10000,
         cost=50,
         status="Completed",
@@ -93,6 +94,7 @@ def test_invalid_service_record_string_types():
     )
 
     errors = validate_service_record(record)
+
     assert "Service type is required." in errors
 
 
@@ -101,7 +103,7 @@ def test_invalid_service_record_numeric_types():
         record_id=None,
         vehicle_id=1,
         service_type="Oil Change",
-        service_date="26/09/2026",
+        service_date="2026-09-26",
         mileage="10000",
         cost="50",
         status="Completed",

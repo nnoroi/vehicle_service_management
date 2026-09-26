@@ -20,9 +20,9 @@
     <form method="POST">
 
         {% if error %}
-            <p class="form-error">
-                {{ error }}
-            </p>
+        <p class="form-error">
+            {{ error }}
+        </p>
         {% endif %}
 
         <div class="service-edit-form">
@@ -31,13 +31,7 @@
 
                 <label for="service_type">Service Type</label>
 
-                <input
-                    type="text"
-                    id="service_type"
-                    name="service_type"
-                    value="{{ record.service_type }}"
-                    required
-                >
+                <input type="text" id="service_type" name="service_type" value="{{ record.service_type }}" required>
 
             </div>
 
@@ -45,13 +39,8 @@
 
                 <label for="service_date">Service Date</label>
 
-                <input
-                    type="date"
-                    id="service_date"
-                    name="service_date"
-                    value="{{ record.service_date }}"
-                    required
-                >
+                <input type="text" id="service_date" name="service_date" placeholder="DD-MM-YYYY" maxlength="10"
+                    value="{{ record.service_date | uk_date }}" required>
 
             </div>
 
@@ -59,13 +48,7 @@
 
                 <label for="mileage">Mileage</label>
 
-                <input
-                    type="number"
-                    id="mileage"
-                    name="mileage"
-                    value="{{ record.mileage }}"
-                    required
-                >
+                <input type="number" id="mileage" name="mileage" value="{{ record.mileage }}" required>
 
             </div>
 
@@ -73,14 +56,7 @@
 
                 <label for="cost">Cost (£)</label>
 
-                <input
-                    type="number"
-                    id="cost"
-                    name="cost"
-                    step="0.01"
-                    value="{{ record.cost }}"
-                    required
-                >
+                <input type="number" id="cost" name="cost" step="0.01" value="{{ record.cost }}" required>
 
             </div>
 
@@ -90,31 +66,19 @@
 
                 <select id="status" name="status" required>
 
-                    <option
-                        value="Scheduled"
-                        {% if record.status == "Scheduled" %}selected{% endif %}
-                    >
+                    <option value="Scheduled" {% if record.status=="Scheduled" %}selected{% endif %}>
                         Scheduled
                     </option>
 
-                    <option
-                        value="In Progress"
-                        {% if record.status == "In Progress" %}selected{% endif %}
-                    >
+                    <option value="In Progress" {% if record.status=="In Progress" %}selected{% endif %}>
                         In Progress
                     </option>
 
-                    <option
-                        value="Completed"
-                        {% if record.status == "Completed" %}selected{% endif %}
-                    >
+                    <option value="Completed" {% if record.status=="Completed" %}selected{% endif %}>
                         Completed
                     </option>
 
-                    <option
-                        value="Cancelled"
-                        {% if record.status == "Cancelled" %}selected{% endif %}
-                    >
+                    <option value="Cancelled" {% if record.status=="Cancelled" %}selected{% endif %}>
                         Cancelled
                     </option>
 
@@ -126,10 +90,7 @@
 
                 <label for="notes">Notes</label>
 
-                <textarea
-                    id="notes"
-                    name="notes"
-                >{{ record.notes or "" }}</textarea>
+                <textarea id="notes" name="notes">{{ record.notes or "" }}</textarea>
 
             </div>
 
@@ -137,17 +98,11 @@
 
         <div class="service-edit-actions">
 
-            <button
-                type="submit"
-                class="save-service-button"
-            >
+            <button type="submit" class="save-service-button">
                 Save Changes
             </button>
 
-            <a
-                href="/services/{{ record.id }}/details"
-                class="cancel-service-button"
-            >
+            <a href="/services/{{ record.id }}/details" class="cancel-service-button">
                 Cancel
             </a>
 

@@ -1,5 +1,5 @@
 import pytest
-import sqlite3
+
 from app.models.vehicle import Vehicle
 from app.models.service_record import ServiceRecord
 
@@ -27,6 +27,7 @@ def test_create_service_record(test_database, monkeypatch):
         "app.services.maintenance_service.get_connection",
         test_database
     )
+
     vehicle = Vehicle(
         vehicle_id=None,
         make="Mercedes-Benz",
@@ -37,18 +38,20 @@ def test_create_service_record(test_database, monkeypatch):
         mileage=18500,
         fuel_type="Petrol"
     )
+
     created_vehicle = create_vehicle(vehicle)
 
     record = ServiceRecord(
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Completed",
         notes="Oil and filter replaced"
     )
+
     created_record = create_service_record(record)
 
     assert created_record.id is not None
@@ -62,6 +65,7 @@ def test_get_records_by_vehicle_id(test_database, monkeypatch):
     monkeypatch.setattr(
         "app.services.vehicle_service.get_connection", test_database
     )
+
     monkeypatch.setattr(
         "app.services.service_record_service.get_connection", test_database
     )
@@ -70,6 +74,7 @@ def test_get_records_by_vehicle_id(test_database, monkeypatch):
         "app.services.maintenance_service.get_connection",
         test_database
     )
+
     vehicle = Vehicle(
         vehicle_id=None,
         make="Mercedes-Benz",
@@ -87,7 +92,7 @@ def test_get_records_by_vehicle_id(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=10000,
         cost=75.00,
         status="Completed",
@@ -104,7 +109,10 @@ def test_get_records_by_vehicle_id(test_database, monkeypatch):
     assert records[0].status == "Completed"
 
 
-def test_get_records_by_vehicle_id_orders_same_date_by_id(test_database, monkeypatch):
+def test_get_records_by_vehicle_id_orders_same_date_by_id(
+    test_database,
+    monkeypatch
+):
     monkeypatch.setattr(
         "app.services.service_record_service.get_connection",
         test_database
@@ -146,7 +154,7 @@ def test_get_records_by_vehicle_id_orders_same_date_by_id(test_database, monkeyp
         (
             vehicle_id,
             "Oil Change",
-            "15/09/2026",
+            "2026-09-15",
             30000,
             100,
             "Completed",
@@ -169,7 +177,7 @@ def test_get_records_by_vehicle_id_orders_same_date_by_id(test_database, monkeyp
         (
             vehicle_id,
             "Full Service",
-            "15/09/2026",
+            "2026-09-15",
             40000,
             250,
             "Completed",
@@ -235,7 +243,7 @@ def test_get_all_records(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle1.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=15000,
         cost=75.00,
         status="Completed",
@@ -246,7 +254,7 @@ def test_get_all_records(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle2.id,
         service_type="Brake Inspection",
-        service_date="30/08/2026",
+        service_date="2026-08-30",
         mileage=10000,
         cost=120.00,
         status="Completed",
@@ -296,7 +304,7 @@ def test_update_service_record(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Scheduled",
@@ -312,6 +320,7 @@ def test_update_service_record(test_database, monkeypatch):
     result = update_service_record(created_record)
 
     assert result is True
+
     records = get_records_by_vehicle_id(created_vehicle.id)
 
     assert records[0].status == "Completed"
@@ -352,7 +361,7 @@ def test_delete_service_record(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Scheduled",
@@ -360,10 +369,13 @@ def test_delete_service_record(test_database, monkeypatch):
     )
 
     created_record = create_service_record(record)
+
     result = delete_service_record(created_record.id)
 
     assert result is True
+
     records = get_records_by_vehicle_id(created_vehicle.id)
+
     assert len(records) == 0
 
 
@@ -372,6 +384,7 @@ def test_create_service_record_with_invalid_data(test_database, monkeypatch):
         "app.services.vehicle_service.get_connection",
         test_database
     )
+
     monkeypatch.setattr(
         "app.services.maintenance_service.get_connection",
         test_database
@@ -381,7 +394,7 @@ def test_create_service_record_with_invalid_data(test_database, monkeypatch):
         record_id=None,
         vehicle_id=9999,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Scheduled",
@@ -392,90 +405,7 @@ def test_create_service_record_with_invalid_data(test_database, monkeypatch):
         create_service_record(record)
 
 
-def test_create_service_record_with_negative_cost(test_database, monkeypatch):
-    monkeypatch.setattr(
-        "app.services.vehicle_service.get_connection",
-        test_database
-    )
-    monkeypatch.setattr(
-        "app.services.service_record_service.get_connection",
-        test_database
-    )
-
-    monkeypatch.setattr(
-        "app.services.maintenance_service.get_connection",
-        test_database
-    )
-    vehicle = Vehicle(
-        vehicle_id=None,
-        make="Mercedes-Benz",
-        model="AMG C 63",
-        year=2024,
-        registration="MB24 XYZ",
-        vin="W1K98765432109876",
-        mileage=18500,
-        fuel_type="Petrol"
-    )
-    created_vehicle = create_vehicle(vehicle)
-
-    record = ServiceRecord(
-        record_id=None,
-        vehicle_id=created_vehicle.id,
-        service_type="Oil Change",
-        service_date="31/08/2026",
-        mileage=18500,
-        cost=-75.00,
-        status="Scheduled",
-        notes="Oil and filter replacement"
-    )
-
-    with pytest.raises(ValueError):
-        create_service_record(record)
-
-
-def test_create_service_record_with_negative_mileage(test_database, monkeypatch):
-    monkeypatch.setattr(
-        "app.services.vehicle_service.get_connection",
-        test_database
-    )
-
-    monkeypatch.setattr(
-        "app.services.service_record_service.get_connection",
-        test_database
-    )
-
-    monkeypatch.setattr(
-        "app.services.maintenance_service.get_connection",
-        test_database
-    )
-    vehicle = Vehicle(
-        vehicle_id=None,
-        make="Mercedes-Benz",
-        model="AMG C 63",
-        year=2024,
-        registration="MB24 XYZ",
-        vin="W1K98765432109876",
-        mileage=18500,
-        fuel_type="Petrol"
-    )
-    created_vehicle = create_vehicle(vehicle)
-
-    record = ServiceRecord(
-        record_id=None,
-        vehicle_id=created_vehicle.id,
-        service_type="Oil Change",
-        service_date="31/08/2026",
-        mileage=-18500,
-        cost=75.00,
-        status="Scheduled",
-        notes="Oil and filter replacement"
-    )
-
-    with pytest.raises(ValueError):
-        create_service_record(record)
-
-
-def test_create_service_record_with_invalid_status(
+def test_create_service_record_with_negative_cost(
     test_database,
     monkeypatch
 ):
@@ -511,7 +441,101 @@ def test_create_service_record_with_invalid_status(
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
+        mileage=18500,
+        cost=-75.00,
+        status="Scheduled",
+        notes="Oil and filter replacement"
+    )
+
+    with pytest.raises(ValueError):
+        create_service_record(record)
+
+
+def test_create_service_record_with_negative_mileage(
+    test_database,
+    monkeypatch
+):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="Mercedes-Benz",
+        model="AMG C 63",
+        year=2024,
+        registration="MB24 XYZ",
+        vin="W1K98765432109876",
+        mileage=18500,
+        fuel_type="Petrol"
+    )
+
+    created_vehicle = create_vehicle(vehicle)
+
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=created_vehicle.id,
+        service_type="Oil Change",
+        service_date="2026-08-31",
+        mileage=-18500,
+        cost=75.00,
+        status="Scheduled",
+        notes="Oil and filter replacement"
+    )
+
+    with pytest.raises(ValueError):
+        create_service_record(record)
+
+
+def test_create_service_record_with_invalid_status(
+    test_database,
+    monkeypatch
+):
+    monkeypatch.setattr(
+        "app.services.vehicle_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    monkeypatch.setattr(
+        "app.services.maintenance_service.get_connection",
+        test_database
+    )
+
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="Mercedes-Benz",
+        model="AMG C 63",
+        year=2024,
+        registration="MB24 XYZ",
+        vin="W1K98765432109876",
+        mileage=18500,
+        fuel_type="Petrol"
+    )
+
+    created_vehicle = create_vehicle(vehicle)
+
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=created_vehicle.id,
+        service_type="Oil Change",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Random",
@@ -532,7 +556,7 @@ def test_update_nonexistent_service_record(test_database, monkeypatch):
         record_id=9999,
         vehicle_id=1,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Completed",
@@ -555,7 +579,10 @@ def test_delete_nonexistent_service_record(test_database, monkeypatch):
     assert result is False
 
 
-def test_update_service_record_with_negative_cost(test_database, monkeypatch):
+def test_update_service_record_with_negative_cost(
+    test_database,
+    monkeypatch
+):
     monkeypatch.setattr(
         "app.services.vehicle_service.get_connection",
         test_database
@@ -588,7 +615,7 @@ def test_update_service_record_with_negative_cost(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=10000,
         cost=100.00,
         status="Scheduled",
@@ -603,7 +630,10 @@ def test_update_service_record_with_negative_cost(test_database, monkeypatch):
         update_service_record(created_record)
 
 
-def test_update_service_record_with_negative_mileage(test_database, monkeypatch):
+def test_update_service_record_with_negative_mileage(
+    test_database,
+    monkeypatch
+):
     monkeypatch.setattr(
         "app.services.vehicle_service.get_connection",
         test_database
@@ -618,6 +648,7 @@ def test_update_service_record_with_negative_mileage(test_database, monkeypatch)
         "app.services.maintenance_service.get_connection",
         test_database
     )
+
     vehicle = Vehicle(
         vehicle_id=None,
         make="Mercedes-Benz",
@@ -635,7 +666,7 @@ def test_update_service_record_with_negative_mileage(test_database, monkeypatch)
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=10000,
         cost=100.00,
         status="Scheduled",
@@ -655,6 +686,7 @@ def test_get_service_record_by_id(test_database, monkeypatch):
         "app.services.vehicle_service.get_connection",
         test_database
     )
+
     monkeypatch.setattr(
         "app.services.service_record_service.get_connection",
         test_database
@@ -682,7 +714,7 @@ def test_get_service_record_by_id(test_database, monkeypatch):
         record_id=None,
         vehicle_id=created_vehicle.id,
         service_type="Oil Change",
-        service_date="31/08/2026",
+        service_date="2026-08-31",
         mileage=18500,
         cost=75.00,
         status="Completed",
@@ -706,6 +738,7 @@ def test_get_service_record_by_id_not_found(test_database, monkeypatch):
     )
 
     result = get_service_record_by_id(9999)
+
     assert result is None
 
 
@@ -716,6 +749,7 @@ def test_get_service_history_summary(test_database, monkeypatch):
     )
 
     connection = test_database()
+
     connection.execute(
         """
         INSERT INTO vehicles (
@@ -795,7 +829,9 @@ def test_get_service_history_summary(test_database, monkeypatch):
 
     connection.commit()
 
-    from app.services.service_record_service import get_service_history_summary
+    from app.services.service_record_service import (
+        get_service_history_summary
+    )
 
     summary = get_service_history_summary(vehicle_id)
 
@@ -809,7 +845,6 @@ def test_get_service_history_summary_uses_latest_service_mileage(
     test_database,
     monkeypatch
 ):
-
     monkeypatch.setattr(
         "app.services.service_record_service.get_connection",
         test_database
@@ -896,7 +931,9 @@ def test_get_service_history_summary_uses_latest_service_mileage(
 
     connection.commit()
 
-    from app.services.service_record_service import get_service_history_summary
+    from app.services.service_record_service import (
+        get_service_history_summary
+    )
 
     summary = get_service_history_summary(vehicle_id)
 
@@ -943,7 +980,9 @@ def test_get_service_history_summary_empty(test_database, monkeypatch):
 
     connection.commit()
 
-    from app.services.service_record_service import get_service_history_summary
+    from app.services.service_record_service import (
+        get_service_history_summary
+    )
 
     summary = get_service_history_summary(vehicle_id)
 
@@ -986,13 +1025,7 @@ def test_create_service_record_rejects_lower_mileage(
     connection.execute(
         """
         INSERT INTO vehicles (
-            make,
-            model,
-            year,
-            registration,
-            vin,
-            mileage,
-            fuel_type
+            make, model, year, registration, vin, mileage, fuel_type
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1015,13 +1048,8 @@ def test_create_service_record_rejects_lower_mileage(
     connection.execute(
         """
         INSERT INTO service_records (
-            vehicle_id,
-            service_type,
-            service_date,
-            mileage,
-            cost,
-            status,
-            notes
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1085,13 +1113,7 @@ def test_update_service_record_rejects_lower_mileage(
     connection.execute(
         """
         INSERT INTO vehicles (
-            make,
-            model,
-            year,
-            registration,
-            vin,
-            mileage,
-            fuel_type
+            make, model, year, registration, vin, mileage, fuel_type
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1114,13 +1136,8 @@ def test_update_service_record_rejects_lower_mileage(
     connection.execute(
         """
         INSERT INTO service_records (
-            vehicle_id,
-            service_type,
-            service_date,
-            mileage,
-            cost,
-            status,
-            notes
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1138,13 +1155,8 @@ def test_update_service_record_rejects_lower_mileage(
     second_record = connection.execute(
         """
         INSERT INTO service_records (
-            vehicle_id,
-            service_type,
-            service_date,
-            mileage,
-            cost,
-            status,
-            notes
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1198,13 +1210,7 @@ def test_update_service_record_rejects_higher_than_next_mileage(
     cursor = connection.execute(
         """
         INSERT INTO vehicles (
-            make,
-            model,
-            year,
-            registration,
-            vin,
-            mileage,
-            fuel_type
+            make, model, year, registration, vin, mileage, fuel_type
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1224,13 +1230,8 @@ def test_update_service_record_rejects_higher_than_next_mileage(
     connection.execute(
         """
         INSERT INTO service_records (
-            vehicle_id,
-            service_type,
-            service_date,
-            mileage,
-            cost,
-            status,
-            notes
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1248,13 +1249,8 @@ def test_update_service_record_rejects_higher_than_next_mileage(
     cursor = connection.execute(
         """
         INSERT INTO service_records (
-            vehicle_id,
-            service_type,
-            service_date,
-            mileage,
-            cost,
-            status,
-            notes
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
@@ -1274,13 +1270,8 @@ def test_update_service_record_rejects_higher_than_next_mileage(
     connection.execute(
         """
         INSERT INTO service_records (
-            vehicle_id,
-            service_type,
-            service_date,
-            mileage,
-            cost,
-            status,
-            notes
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """,

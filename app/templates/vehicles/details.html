@@ -156,7 +156,7 @@
                 <div class="service-card-header">
                     <div>
                         <h3>{{ record.service_type }}</h3>
-                        <span class="service-date">{{ record.service_date }}</span>
+                        <span class="service-date">{{ record.service_date | uk_date }}</span>
                     </div>
 
                     {% if record.status == "Completed" %}
