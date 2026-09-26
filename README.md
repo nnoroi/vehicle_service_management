@@ -69,15 +69,13 @@ The application is focused on managing Mercedes-Benz vehicles, their service rec
 
 ## Project Structure
 
-```text
-vehicle_service_management/
-│
 ├── app/
 │   ├── database/
 │   ├── models/
 │   ├── routes/
 │   ├── services/
 │   ├── validators/
+│   ├── utils/
 │   ├── static/
 │   ├── templates/
 │   ├── errors.py
@@ -91,34 +89,49 @@ vehicle_service_management/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
-```
+
+The application code is organised into separate modules based on their responsibilities.
 
 The local SQLite database is stored in `instance/` and is excluded from version control.
 
 ## Architecture
 
-The application separates responsibilities into different layers:
+The application uses a layered structure to separate HTTP handling, business logic, validation and database operations.
 
-```text
-Routes
-  ↓
-Services
-  ↓
-Validators
-  ↓
-Database
-```
+                    ┌──────────────┐
+                    │    Routes    │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │   Services   │
+                    └───┬──────┬───┘
+                        │      │
+              ┌─────────┘      └─────────┐
+              ▼                          ▼
+       ┌─────────────┐            ┌─────────────┐
+       │ Validators  │            │   Mappers   │
+       └─────────────┘            └─────────────┘
+              │                          │
+              └────────────┬─────────────┘
+                           ▼
+                    ┌──────────────┐
+                    │   Database   │
+                    │    SQLite    │
+                    └──────────────┘
 
-Models represent the application's data structures and are used throughout the application layers.
+## Application Layers
 
-* **Routes** handle HTTP requests and responses.
-* **Services** contain application and business logic.
-* **Models** represent application data.
-* **Validators** handle input validation.
-* **Database** contains SQLite connection and database initialisation logic.
-* **Templates** provide the web interface.
-* **Tests** verify application behaviour.
-* **Error handling** provides consistent API responses for application errors.
+* Routes handle HTTP requests, responses and page rendering.
+* Services contain the application's business and database-related logic.
+* Models represent application data such as vehicles and service records.
+* Validators check user input before data is saved or updated.
+* Mappers convert database rows into model objects and models into API  responses.
+* Database provides SQLite connections and database initialisation.
+* Templates provide the web interface using HTML and Jinja2.
+* Utils contain reusable application utilities such as date formatting.
+* Tests verify application behaviour and help prevent regressions.
+* Error handling provides consistent responses for application errors.
 
 This separation keeps the application modular, easier to test and easier to maintain.
 
