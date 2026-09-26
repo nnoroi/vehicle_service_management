@@ -132,21 +132,10 @@ def update_service_record(record):
     if errors:
         raise ValueError("\n".join(errors))
 
-    connection = get_connection()
-    existing_record = connection.execute(
-        """
-        SELECT id
-        FROM service_records
-        WHERE id = ?
-        """,
-        (record.id,)
-    ).fetchone()
+    existing_record = get_service_record_by_id(record.id)
 
     if existing_record is None:
-        connection.close()
         return False
-
-    connection.close()
 
     previous_service = get_previous_service_for_vehicle(
         record.vehicle_id,
