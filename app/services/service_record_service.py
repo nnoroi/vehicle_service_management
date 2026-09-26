@@ -67,8 +67,13 @@ def get_records_by_vehicle_id(vehicle_id):
 
     connection = get_connection()
     cursor = connection.execute(
-        """SELECT * FROM service_records WHERE vehicle_id = ? ORDER BY service_date DESC""", (
-            vehicle_id,)
+        """
+        SELECT * 
+        FROM service_records 
+        WHERE vehicle_id = ? 
+        ORDER BY service_date DESC, id DESC
+        """,
+        (vehicle_id,)
     )
     rows = cursor.fetchall()
     connection.close()

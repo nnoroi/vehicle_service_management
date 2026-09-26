@@ -104,6 +104,92 @@ def test_get_records_by_vehicle_id(test_database, monkeypatch):
     assert records[0].status == "Completed"
 
 
+def test_get_records_by_vehicle_id_orders_same_date_by_id(test_database, monkeypatch):
+    monkeypatch.setattr(
+        "app.services.service_record_service.get_connection",
+        test_database
+    )
+
+    connection = test_database()
+
+    connection.execute(
+        """
+        INSERT INTO vehicles (
+            make, model, year, registration, vin, mileage, fuel_type
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "Mercedes-Benz",
+            "E-Class",
+            2025,
+            "MB25 TEST",
+            "W1K12345678901234",
+            40000,
+            "Diesel"
+        )
+    )
+
+    vehicle_id = connection.execute(
+        "SELECT id FROM vehicles WHERE registration = ?",
+        ("MB25 TEST",)
+    ).fetchone()["id"]
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Oil Change",
+            "15/09/2026",
+            30000,
+            100,
+            "Completed",
+            ""
+        )
+    )
+
+    first_id = connection.execute(
+        "SELECT last_insert_rowid()"
+    ).fetchone()[0]
+
+    connection.execute(
+        """
+        INSERT INTO service_records (
+            vehicle_id, service_type, service_date,
+            mileage, cost, status, notes
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            vehicle_id,
+            "Full Service",
+            "15/09/2026",
+            40000,
+            250,
+            "Completed",
+            ""
+        )
+    )
+
+    second_id = connection.execute(
+        "SELECT last_insert_rowid()"
+    ).fetchone()[0]
+
+    connection.commit()
+    connection.close()
+
+    records = get_records_by_vehicle_id(vehicle_id)
+
+    assert records[0].id == second_id
+    assert records[1].id == first_id
+
+
 def test_get_all_records(test_database, monkeypatch):
     monkeypatch.setattr(
         "app.services.vehicle_service.get_connection",
