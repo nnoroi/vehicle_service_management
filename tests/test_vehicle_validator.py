@@ -87,3 +87,43 @@ def test_invalid_vehicle_year_type():
 
     errors = validate_vehicle(vehicle)
     assert "Year must be a number." in errors
+
+
+def test_invalid_vehicle_string_types():
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make=None,
+        model=123,
+        year=2025,
+        registration=None,
+        vin=None,
+        mileage=0,
+        fuel_type=456
+    )
+
+    errors = validate_vehicle(vehicle)
+
+    assert "Make is required." in errors
+    assert "Model is required." in errors
+    assert "Registration is required." in errors
+    assert "Fuel type is required." in errors
+
+
+def test_vehicle_with_whitespace_strings():
+    vehicle = Vehicle(
+        vehicle_id=None,
+        make="   ",
+        model="   ",
+        year=2025,
+        registration="   ",
+        vin=None,
+        mileage=0,
+        fuel_type="   "
+    )
+
+    errors = validate_vehicle(vehicle)
+
+    assert "Make is required." in errors
+    assert "Model is required." in errors
+    assert "Registration is required." in errors
+    assert "Fuel type is required." in errors
