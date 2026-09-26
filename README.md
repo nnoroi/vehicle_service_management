@@ -253,25 +253,25 @@ Tests use isolated database connections and mocking where required to avoid modi
 
 ### Dashboard
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/dashboard.jpg)
 
 ### Vehicle Management
 
-![Vehicles](screenshots/vehicles.png)
+![Vehicles](screenshots/vehicles.jpg)
 
-![Vehicle Details](screenshots/vehicle-details.png)
+![Vehicle Details](screenshots/vehicle-details.jpg)
 
 ### Service Management
 
-![Service History](screenshots/service-history.png)
+![Service History](screenshots/service-history.jpg)
 
-![Add Service](screenshots/add-service.png)
+![Add Service](screenshots/add-service.jpg)
 
-![Service Details](screenshots/service-details.png)
+![Service Details](screenshots/service-details.jpg)
 
 ### Testing
 
-![Tests](screenshots/tests.png)
+![Tests](screenshots/tests.jpg)
 
 ## Development Approach
 
