@@ -12,6 +12,8 @@ from app.services.vehicle_service import (
     update_vehicle,
     delete_vehicle
 )
+from app.services.vehicle_mapper import vehicle_to_dict
+
 vehicle_bp = Blueprint("vehicles", __name__)
 
 
@@ -109,16 +111,7 @@ def create_vehicle_route():
 
     vehicle = create_vehicle(vehicle)
 
-    return jsonify({
-        "id": vehicle.id,
-        "make": vehicle.make,
-        "model": vehicle.model,
-        "year": vehicle.year,
-        "registration": vehicle.registration,
-        "vin": vehicle.vin,
-        "mileage": vehicle.mileage,
-        "fuel_type": vehicle.fuel_type
-    }), 201
+    return jsonify(vehicle_to_dict(vehicle)), 201
 
 
 @vehicle_bp.route("/vehicles/<int:vehicle_id>", methods=["PUT"])
@@ -147,16 +140,7 @@ def update_vehicle_route(vehicle_id):
 
     update_vehicle(vehicle)
 
-    return jsonify({
-        "id": vehicle.id,
-        "make": vehicle.make,
-        "model": vehicle.model,
-        "year": vehicle.year,
-        "registration": vehicle.registration,
-        "vin": vehicle.vin,
-        "mileage": vehicle.mileage,
-        "fuel_type": vehicle.fuel_type
-    }), 200
+    return jsonify(vehicle_to_dict(vehicle)), 200
 
 
 @vehicle_bp.route("/vehicles/<int:vehicle_id>/edit", methods=["GET", "POST"])

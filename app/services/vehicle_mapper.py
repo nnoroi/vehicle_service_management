@@ -12,3 +12,16 @@ def row_to_vehicle(row):
         mileage=row["mileage"],
         fuel_type=row["fuel_type"]
     )
+
+
+def vehicle_to_dict(vehicle):
+    return {
+        "id": vehicle.id,
+        "make": vehicle.make,
+        "model": vehicle.model,
+        "year": vehicle.year,
+        "registration": vehicle.registration,
+        "vin": vehicle.vin,
+        "mileage": vehicle.mileage,
+        "fuel_type": vehicle.fuel_type
+    }
