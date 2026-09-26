@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, render_template, redirect
-
 from app.models.service_record import ServiceRecord
+from app.services.service_record_mapper import service_record_to_dict
 from app.services.service_record_service import (
     get_records_by_vehicle_id,
     get_service_record_by_id,
@@ -13,19 +13,6 @@ from app.services.vehicle_service import get_vehicle_by_id
 
 
 service_bp = Blueprint("services", __name__)
-
-
-def service_record_to_dict(record):
-    return {
-        "id": record.id,
-        "vehicle_id": record.vehicle_id,
-        "service_type": record.service_type,
-        "service_date": record.service_date,
-        "mileage": record.mileage,
-        "cost": record.cost,
-        "status": record.status,
-        "notes": record.notes
-    }
 
 
 @service_bp.route("/services")
