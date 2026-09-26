@@ -1,5 +1,4 @@
 from app.database.connection import get_connection
-from app.models.service_record import ServiceRecord
 from app.services.service_record_mapper import row_to_service_record
 
 
