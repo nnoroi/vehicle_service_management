@@ -68,7 +68,7 @@ The application is focused on managing Mercedes-Benz vehicles, their service rec
 * **Git / GitHub**
 
 ## Project Structure
-
+```text
 ├── app/
 │   ├── database/
 │   ├── models/
@@ -89,6 +89,7 @@ The application is focused on managing Mercedes-Benz vehicles, their service rec
 ├── .gitignore
 ├── README.md
 └── requirements.txt
+```
 
 The application code is organised into separate modules based on their responsibilities.
 
