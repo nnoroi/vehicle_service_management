@@ -1,6 +1,6 @@
 from app.database.connection import get_connection
-from app.models.vehicle import Vehicle
 from app.validators.vehicle_validator import validate_vehicle
+from app.services.vehicle_mapper import row_to_vehicle
 
 
 def create_vehicle(vehicle):
@@ -54,16 +54,7 @@ def get_vehicle_by_id(vehicle_id):
     if row is None:
         return None
 
-    return Vehicle(
-        vehicle_id=row["id"],
-        make=row["make"],
-        model=row["model"],
-        year=row["year"],
-        registration=row["registration"],
-        vin=row["vin"],
-        mileage=row["mileage"],
-        fuel_type=row["fuel_type"]
-    )
+    return row_to_vehicle(row)
 
 
 def get_all_vehicles():
@@ -72,22 +63,8 @@ def get_all_vehicles():
     cursor = connection.execute("SELECT * FROM vehicles ORDER BY id")
     rows = cursor.fetchall()
     connection.close()
-    vehicles = []
 
-    for row in rows:
-        vehicle = Vehicle(
-            vehicle_id=row["id"],
-            make=row["make"],
-            model=row["model"],
-            year=row["year"],
-            registration=row["registration"],
-            vin=row["vin"],
-            mileage=row["mileage"],
-            fuel_type=row["fuel_type"]
-        )
-        vehicles.append(vehicle)
-
-    return vehicles
+    return [row_to_vehicle(row) for row in rows]
 
 
 def update_vehicle(vehicle):
