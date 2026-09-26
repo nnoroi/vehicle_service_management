@@ -7,6 +7,7 @@ from app.services.maintenance_service import (
     get_previous_service_for_vehicle,
     get_next_service_for_vehicle
 )
+from app.services.service_record_mapper import row_to_service_record
 
 
 def create_service_record(record):
@@ -71,20 +72,7 @@ def get_records_by_vehicle_id(vehicle_id):
     )
     rows = cursor.fetchall()
     connection.close()
-    records = []
-    for row in rows:
-        record = ServiceRecord(
-            record_id=row["id"],
-            vehicle_id=row["vehicle_id"],
-            service_type=row["service_type"],
-            service_date=row["service_date"],
-            mileage=row["mileage"],
-            cost=row["cost"],
-            status=row["status"],
-            notes=row["notes"]
-        )
-        records.append(record)
-    return records
+    return [row_to_service_record(row) for row in rows]
 
 
 def get_service_history_summary(vehicle_id):
@@ -134,16 +122,7 @@ def get_service_record_by_id(record_id):
     if row is None:
         return None
 
-    return ServiceRecord(
-        record_id=row["id"],
-        vehicle_id=row["vehicle_id"],
-        service_type=row["service_type"],
-        service_date=row["service_date"],
-        mileage=row["mileage"],
-        cost=row["cost"],
-        status=row["status"],
-        notes=row["notes"]
-    )
+    return row_to_service_record(row)
 
 
 def update_service_record(record):
@@ -230,20 +209,7 @@ def get_all_records():
 
     rows = cursor.fetchall()
     connection.close()
-    records = []
-    for row in rows:
-        record = ServiceRecord(
-            record_id=row["id"],
-            vehicle_id=row["vehicle_id"],
-            service_type=row["service_type"],
-            service_date=row["service_date"],
-            mileage=row["mileage"],
-            cost=row["cost"],
-            status=row["status"],
-            notes=row["notes"]
-        )
-        records.append(record)
-    return records
+    return [row_to_service_record(row) for row in rows]
 
 
 def delete_service_record(record_id):
