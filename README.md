@@ -67,6 +67,30 @@ The application is focused on managing Mercedes-Benz vehicles, their service rec
 * **pytest**
 * **Git / GitHub**
 
+## Screenshots
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.jpg)
+
+### Vehicle Management
+
+![Vehicles](screenshots/vehicles.jpg)
+
+![Vehicle Details](screenshots/vehicle-details.jpg)
+
+### Service Management
+
+![Service History](screenshots/service-history.jpg)
+
+![Add Service](screenshots/add-service.jpg)
+
+![Service Details](screenshots/service-details.jpg)
+
+### Testing
+
+![Tests](screenshots/tests.jpg)
+
 ## Project Structure
 ```text
 ├── app/
@@ -84,8 +108,9 @@ The application is focused on managing Mercedes-Benz vehicles, their service rec
 ├── tests/
 │
 ├── instance/
-│   └── database.db
+│   └── # Local database (not tracked by Git)
 │
+├── screenshots/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
@@ -124,7 +149,7 @@ The application uses a layered structure to separate HTTP handling, business log
 ## Application Layers
 
 * Routes handle HTTP requests, responses and page rendering.
-* Services contain the application's business and database-related logic.
+* Services contain the application's business logic and coordinate database operations.
 * Models represent application data such as vehicles and service records.
 * Validators check user input before data is saved or updated.
 * Mappers convert database rows into model objects and models into API  responses.
@@ -136,6 +161,15 @@ The application uses a layered structure to separate HTTP handling, business log
 
 This separation keeps the application modular, easier to test and easier to maintain.
 
+## Web Routes
+
+The application also provides HTML web routes for interacting with the system through the browser.
+
+| Method | Endpoint | Description                         |
+| ------ | -------- | ------------------------------------|
+| GET | `/vehicles` | Display the vehicle management page |
+| GET | `/services` | Display service records             |
+
 ## REST API
 
 The application provides REST API endpoints for vehicle and service record management.
@@ -144,9 +178,8 @@ The application provides REST API endpoints for vehicle and service record manag
 
 | Method | Endpoint                             | Description                         |
 | ------ | ------------------------------------ | ----------------------------------- |
-| GET    | `/vehicles`                          | Display the vehicle management page |
 | POST   | `/vehicles`                          | Create a vehicle through the API    |
-| GET    | `/vehicles/<vehicle_id>`             | View vehicle details                |
+| GET    | `/vehicles/<vehicle_id>`             | Get vehicle details                 |
 | PUT    | `/vehicles/<vehicle_id>`             | Update a vehicle                    |
 | DELETE | `/vehicles/<vehicle_id>`             | Delete a vehicle                    |
 | GET    | `/vehicles/<vehicle_id>/maintenance` | Get maintenance information         |
@@ -155,7 +188,6 @@ The application provides REST API endpoints for vehicle and service record manag
 
 | Method | Endpoint                          | Description                       |
 | ------ | --------------------------------- | --------------------------------- |
-| GET    | `/services`                       | Display service records           |
 | GET    | `/vehicles/<vehicle_id>/services` | Get service records for a vehicle |
 | POST   | `/vehicles/<vehicle_id>/services` | Create a service record           |
 | GET    | `/services/<service_id>`          | Get a service record              |
@@ -249,29 +281,6 @@ The test suite covers areas including:
 
 Tests use isolated database connections and mocking where required to avoid modifying the application's local database.
 
-## Screenshots
-
-### Dashboard
-
-![Dashboard](screenshots/dashboard.jpg)
-
-### Vehicle Management
-
-![Vehicles](screenshots/vehicles.jpg)
-
-![Vehicle Details](screenshots/vehicle-details.jpg)
-
-### Service Management
-
-![Service History](screenshots/service-history.jpg)
-
-![Add Service](screenshots/add-service.jpg)
-
-![Service Details](screenshots/service-details.jpg)
-
-### Testing
-
-![Tests](screenshots/tests.jpg)
 
 ## Development Approach
 
