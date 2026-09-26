@@ -198,7 +198,11 @@ def get_all_records():
     """"Get all service records from the database"""
     connection = get_connection()
     cursor = connection.execute(
-        """SELECT * FROM service_records ORDER BY service_date DESC"""
+        """
+        SELECT * 
+        FROM service_records 
+        ORDER BY service_date DESC, id DESC
+        """
     )
 
     rows = cursor.fetchall()

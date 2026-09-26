@@ -6,10 +6,10 @@
     <span class="service-details-label">SERVICE RECORD</span>
 
     <h1>{{ record.service_type }}</h1>
-        <p class="service-vehicle">
-            {{ vehicle.make }} {{ vehicle.model}}
-           <span>{{ vehicle.year }}</span>
-        </p>
+    <p class="service-vehicle">
+        {{ vehicle.make }} {{ vehicle.model}}
+        <span>{{ vehicle.year }}</span>
+    </p>
     </header>
 
     <section class="service-information">
@@ -17,31 +17,31 @@
             <span>Status</span>
 
             {% if record.status == "Completed" %}
-                <strong class="service-detail-status service-completed">
-                    Completed
-                </strong>
+            <strong class="service-detail-status service-completed">
+                Completed
+            </strong>
 
             {% elif record.status == "Scheduled" %}
-                <strong class="service-detail-status service-scheduled">
-                    Scheduled
-                </strong>
-            
+            <strong class="service-detail-status service-scheduled">
+                Scheduled
+            </strong>
+
             {% elif record.status == "In Progress" %}
-                <strong class="service-detail-status service-in-progress">
-                    In Progress
-                </strong>
-            
+            <strong class="service-detail-status service-in-progress">
+                In Progress
+            </strong>
+
             {% elif record.status == "Cancelled" %}
-                <strong class="service-detail-status service-cancelled">
-                    Cancelled
-                </strong>
+            <strong class="service-detail-status service-cancelled">
+                Cancelled
+            </strong>
 
             {% endif %}
         </div>
 
         <div class="service-information-item">
             <span>Service Date</span>
-            <strong>{{ record.service_date }}</strong>
+            <strong>{{ record.service_date | uk_date }}</strong>
         </div>
 
         <div class="service-information-item">
@@ -72,16 +72,8 @@
             Back to Services
         </a>
 
-        <form
-            method="POST"
-            action="/services/{{ record.id }}/delete"
-            id="delete-service-form"
-            >
-            <button 
-            type="button" 
-            class="delete-service-button"
-            onclick="openServiceDeleteModal()"
-            >
+        <form method="POST" action="/services/{{ record.id }}/delete" id="delete-service-form">
+            <button type="button" class="delete-service-button" onclick="openServiceDeleteModal()">
                 Delete Service Record
             </button>
         </form>
@@ -93,29 +85,21 @@
     <div class="delete-modal-content">
 
         <span class="delete-modal-label">DELETE SERVICE RECORD</span>
-        
+
         <h2>Delete {{ record.service_type }}</h2>
 
-         <p>
+        <p>
             This will permanently delete this service record.
             This action cannot be undone.
         </p>
 
         <div class="delete-modal-actions">
 
-            <button 
-                type="button"
-                class="cancel-delete-button"
-                onclick="closeServiceDeleteModal()"
-            >
+            <button type="button" class="cancel-delete-button" onclick="closeServiceDeleteModal()">
                 Cancel
             </button>
 
-            <button 
-                type="button"
-                class="confirm-delete-button"
-                onclick="confirmServiceDelete()"
-            >
+            <button type="button" class="confirm-delete-button" onclick="confirmServiceDelete()">
                 Delete Service Record
             </button>
         </div>

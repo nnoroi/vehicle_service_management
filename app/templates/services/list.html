@@ -25,116 +25,114 @@
 
         {% if records %}
 
-            {% for record in records %}
+        {% for record in records %}
 
-            <article class="service-card">
+        <article class="service-card">
 
-                <div class="service-card-header">
+            <div class="service-card-header">
 
-                    <div>
-                        <span class="service-card-label">SERVICE</span>
+                <div>
+                    <span class="service-card-label">SERVICE</span>
 
-                        <h2>{{ record.service_type }}</h2>
-                    </div>
-
-                    {% if record.status == "Completed" %}
-
-                        <span class="service-status service-completed">
-                            Completed
-                        </span>
-
-                    {% elif record.status == "Scheduled" %}
-
-                        <span class="service-status service-scheduled">
-                            Scheduled
-                        </span>
-
-                    {% elif record.status == "In Progress" %}
-
-                        <span class="service-status service-in-progress">
-                            In Progress
-                        </span>
-
-                    {% elif record.status == "Cancelled" %}
-
-                        <span class="service-status service-cancelled">
-                            Cancelled
-                        </span>
-
-                    {% endif %}
-
+                    <h2>{{ record.service_type }}</h2>
                 </div>
 
-                <div class="service-card-vehicle">
+                {% if record.status == "Completed" %}
 
-                    <span>VEHICLE</span>
+                <span class="service-status service-completed">
+                    Completed
+                </span>
 
-                    <strong>
-                        {{ vehicles[record.vehicle_id].make }}
-                        {{ vehicles[record.vehicle_id].model }}
-                    </strong>
+                {% elif record.status == "Scheduled" %}
 
-                    <p>
-                        {{ vehicles[record.vehicle_id].year }}
-                    </p>
+                <span class="service-status service-scheduled">
+                    Scheduled
+                </span>
 
-                </div>
+                {% elif record.status == "In Progress" %}
 
-                <div class="service-list-details">
+                <span class="service-status service-in-progress">
+                    In Progress
+                </span>
 
-                    <div class="service-detail-item">
-                        <span>Service Date</span>
-                        <strong>{{ record.service_date }}</strong>
-                    </div>
+                {% elif record.status == "Cancelled" %}
 
-                    <div class="service-detail-item">
-                        <span>Mileage</span>
-                        <strong>{{ record.mileage }} miles</strong>
-                    </div>
+                <span class="service-status service-cancelled">
+                    Cancelled
+                </span>
 
-                    <div class="service-detail-item">
-                        <span>Cost</span>
-                        <strong>£{{ record.cost }}</strong>
-                    </div>
+                {% endif %}
 
-                    {% if record.notes %}
+            </div>
 
-                    <div class="service-detail-item service-notes">
-                        <span>Notes</span>
-                        <strong>{{ record.notes }}</strong>
-                    </div>
+            <div class="service-card-vehicle">
 
-                    {% endif %}
+                <span>VEHICLE</span>
 
-                </div>
-
-                <div class="service-card-actions">
-                    <a
-                        href="/services/{{ record.id }}/details"
-                        class="view-service-button">
-                        View Service Record
-                    </a>
-
-                </div>
-
-            </article>
-
-            {% endfor %}
-
-        {% else %}
-
-            <div class="service-empty">
-
-                <span class="service-empty-label">NO RECORDS</span>
-
-                <h2>No service records found</h2>
+                <strong>
+                    {{ vehicles[record.vehicle_id].make }}
+                    {{ vehicles[record.vehicle_id].model }}
+                </strong>
 
                 <p>
-                    Service records for your Mercedes vehicles
-                    will appear here.
+                    {{ vehicles[record.vehicle_id].year }}
                 </p>
 
             </div>
+
+            <div class="service-list-details">
+
+                <div class="service-detail-item">
+                    <span>Service Date</span>
+                    <strong>{{ record.service_date | uk_date }}</strong>
+                </div>
+
+                <div class="service-detail-item">
+                    <span>Mileage</span>
+                    <strong>{{ record.mileage }} miles</strong>
+                </div>
+
+                <div class="service-detail-item">
+                    <span>Cost</span>
+                    <strong>£{{ record.cost }}</strong>
+                </div>
+
+                {% if record.notes %}
+
+                <div class="service-detail-item service-notes">
+                    <span>Notes</span>
+                    <strong>{{ record.notes }}</strong>
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="service-card-actions">
+                <a href="/services/{{ record.id }}/details" class="view-service-button">
+                    View Service Record
+                </a>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+        {% else %}
+
+        <div class="service-empty">
+
+            <span class="service-empty-label">NO RECORDS</span>
+
+            <h2>No service records found</h2>
+
+            <p>
+                Service records for your Mercedes vehicles
+                will appear here.
+            </p>
+
+        </div>
 
         {% endif %}
 
