@@ -78,3 +78,37 @@ def test_valid_service_record_status(status):
     errors = validate_service_record(record)
 
     assert errors == []
+
+
+def test_invalid_service_record_string_types():
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=1,
+        service_type=None,
+        service_date="26/09/2026",
+        mileage=10000,
+        cost=50,
+        status="Completed",
+        notes=""
+    )
+
+    errors = validate_service_record(record)
+    assert "Service type is required." in errors
+
+
+def test_invalid_service_record_numeric_types():
+    record = ServiceRecord(
+        record_id=None,
+        vehicle_id=1,
+        service_type="Oil Change",
+        service_date="26/09/2026",
+        mileage="10000",
+        cost="50",
+        status="Completed",
+        notes=""
+    )
+
+    errors = validate_service_record(record)
+
+    assert "Mileage must be a number." in errors
+    assert "Cost must be a number." in errors
